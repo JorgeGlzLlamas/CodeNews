@@ -1,6 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
+import os
+
+
+def avatar_upload_to(instance, filename):
+    """Return custom upload path for user avatars."""
+    extension = os.path.splitext(filename)[1]
+    username = instance.username if instance.pk else "nuevo_usuario"
+    filename = f"{username}_avatar{extension}"
+    return f"usuarios/avatars/{filename}"
 
 
 class User(AbstractUser):
@@ -50,6 +60,13 @@ class User(AbstractUser):
         blank=True,
     )
 
+    avatar_image = models.ImageField(
+        verbose_name="Avatar",
+        upload_to=avatar_upload_to,
+        default="usuarios/avatars/default.png",
+        blank=True,
+    )
+
     class Meta:
         """Meta options for the User model."""
 
@@ -72,3 +89,27 @@ class User(AbstractUser):
         if not self.slug:
             self.slug = slugify(self.username)
         super().save(*args, **kwargs)
+
+    def _validate_avatar_extension(self):
+        """
+        Validate the file extension of the avatar image.
+
+        Raise ValidationError if the extension is not allowed.
+        """
+        if not self.avatar_image:
+            return
+
+        allowed_extensions = ['.jpg', '.jpeg', '.png', '.webp']
+        extension = os.path.splitext(self.avatar_image.name)[1].lower()
+
+        if extension not in allowed_extensions:
+            raise ValidationError({
+                'avatar_image': (
+                    f"La extensión {extension} no es permitida."
+                    f"Solo se permiten: {', '.join(allowed_extensions)}."
+                )
+            })
+
+    def clean(self):
+        super().clean()
+        self._validate_avatar_extension()
