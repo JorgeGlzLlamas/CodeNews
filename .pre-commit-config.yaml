@@ -1,0 +1,13 @@
+repos:
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-django
+          - flake8-builtins
+          - flake8-docstrings
+          - pep8-naming
+        args:
+          - --max-line-length=120
+          - --extend-ignore=D100,D101,D102,D103,D104,D105

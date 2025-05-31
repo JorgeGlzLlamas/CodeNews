@@ -1,0 +1,48 @@
+# Project information
+site_name: CodeNews
+site_url: https://codenewsdocs.mx/
+
+# Repository (optional, for linking to source code)
+repo_name: JorgeGlzLlamas/CodeNews
+repo_url: https://github.com/JorgeGlzLlamas/CodeNews
+
+# Theme configuration
+theme:
+  name: material 
+  palette:
+    primary: indigo  # Primary color for the theme
+    accent: blue     # Accent color for interactive elements
+  features:
+    - content.code.copy  # Enable copy button for code blocks
+    - content.tabs       # Enable tabs for content
+    - navigation.sections # Organize navigation into sections
+    - search.suggest      # Enable search suggestions
+    - search.highlight    # Highlight search terms
+
+# Navigation structure
+nav:
+  - Inicio: index.md
+  - Instalación:
+      - Requisitos: installation/requirements.md
+      - Guía de Instalación: installation/guide.md
+  - Arquitectura: architecture.md
+  - Modulos:
+      - Api: modules/api.md
+      - Article: modules/articles.md
+      - Comment: modules/comments.md
+      - Profile: modules/users.md
+
+# Markdown extensions for enhanced formatting
+markdown_extensions:
+  - admonition           # Support for admonition blocks (notes, warnings, etc.)
+  - codehilite           # Syntax highlighting for code blocks
+  - toc:
+      permalink: true    # Add permalinks to table of contents
+  - pymdownx.superfences # Advanced code block features
+  - pymdownx.tabbed      # Support for tabbed content
+  - attr_list            # Allow adding attributes to Markdown elements
+  - md_in_html           # Allow HTML in Markdown
+
+# Plugins
+plugins:
+  - search              # Enable search functionality
