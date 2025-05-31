@@ -34,7 +34,7 @@ python -m venv venv
 pip install -r requirements/base.txt
 ```
 
-3. Renombra el archivo `.env.example` a `.env`.
+3. Renombra el archivo `.env.example` a `.env`. Luego, rellena los valores de la base de datos.
 
 4. Luego, ejecuta el siguiente comando para crear la base de datos e inicializar los modelos:
 
