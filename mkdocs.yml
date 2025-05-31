@@ -1,6 +1,6 @@
 # Project information
 site_name: CodeNews
-site_url: https://codenewsdocs.mx/
+site_url: https://jorgeglzllamas.github.io/codenewsdocs/
 
 # Repository (optional, for linking to source code)
 repo_name: JorgeGlzLlamas/CodeNews
@@ -8,7 +8,7 @@ repo_url: https://github.com/JorgeGlzLlamas/CodeNews
 
 # Theme configuration
 theme:
-  name: material 
+  name: mkdocs  # Use Read the Docs theme
   palette:
     primary: indigo  # Primary color for the theme
     accent: blue     # Accent color for interactive elements
