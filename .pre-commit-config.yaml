@@ -11,3 +11,4 @@ repos:
         args:
           - --max-line-length=120
           - --extend-ignore=D100,D101,D102,D103,D104,D105,DJ01
+        exclude: ^migrations/|/migrations/
