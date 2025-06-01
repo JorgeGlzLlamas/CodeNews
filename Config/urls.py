@@ -9,6 +9,7 @@ urlpatterns = [
     path('usuario/', include('users.urls')),
     path('articulos/', include('articles.urls')),
     path('comentarios/', include('comments.urls')),
+    path('auditoria/', include('audit.urls')),
 ]
 
 if settings.DEBUG:
