@@ -140,7 +140,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -154,6 +153,13 @@ STATICFILES_DIRS = [
     # Carpeta donde almacenarás tus archivos estáticos
     os.path.join(BASE_DIR, 'static'),
 ]
+
+AUTH_USER_MODEL = 'users.User'
+
+# Ruta donde se guardarán los archivos multimedia
+MEDIA_URL = '/media/'  # URL base para acceder a archivos multimedia
+# Directorio en el sistema de archivos donde se guardarán los archivos subidos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
