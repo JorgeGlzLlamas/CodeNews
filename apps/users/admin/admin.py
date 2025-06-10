@@ -7,8 +7,7 @@ from users.models.user import User
 class CustomUserAdmin(admin.ModelAdmin):
     model = User
     list_display = (
-        'username', 'email', 'name', 'slug',
-        'paternal_surname', 'maternal_surname',
+        'username', 'email', 'slug',
         'is_active', 'is_staff'
     )
     fieldsets = (
@@ -17,7 +16,6 @@ class CustomUserAdmin(admin.ModelAdmin):
         }),
         ('Información personal', {
             'fields': (
-                'name', 'paternal_surname', 'maternal_surname',
                 'email', 'phone', 'bio', 'avatar_image'
             )
         }),
