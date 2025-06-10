@@ -20,27 +20,6 @@ class User(AbstractUser):
     This allows for additional fields and methods in the future.
     """
 
-    first_name = None
-    last_name = None
-
-    name = models.CharField(
-        max_length=150,
-        verbose_name="Nombre",
-        blank=True,
-    )
-    paternal_surname = models.CharField(
-        max_length=150,
-        verbose_name="Apellido Paterno",
-        blank=True,
-        null=True,
-    )
-    maternal_surname = models.CharField(
-        max_length=150,
-        verbose_name="Apellido Materno",
-        blank=True,
-        null=True,
-    )
-
     phone = models.CharField(
         max_length=150,
         verbose_name="Teléfono",
