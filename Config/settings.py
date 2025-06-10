@@ -52,7 +52,6 @@ DEFAULT_APP = [
 CREATED_APP = [
     'api',
     'articles',
-    'audit',
     'comments',
     'core',
 ]
@@ -65,7 +64,6 @@ THIRD_PARTY_APP = [
 INSTALLED_APPS = [*DEFAULT_APP, *CREATED_APP, *THIRD_PARTY_APP]
 
 MIDDLEWARE = [
-    'core.middleware.CurrentUserMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
