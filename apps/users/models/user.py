@@ -1,8 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 import os
+
+from django.contrib.auth.models import AbstractUser
+from users.models.user_rol import Rol
 
 
 def avatar_upload_to(instance, filename):
@@ -19,6 +21,20 @@ class User(AbstractUser):
 
     This allows for additional fields and methods in the future.
     """
+
+    email = models.EmailField(
+        unique=True
+    )
+
+    first_name = models.CharField(
+        max_length=100,
+        blank=False
+    )
+
+    last_name = models.CharField(
+        max_length=100,
+        blank=False
+    )
 
     phone = models.CharField(
         max_length=150,
@@ -46,6 +62,14 @@ class User(AbstractUser):
         blank=True,
     )
 
+    rol = models.ForeignKey(
+        Rol,
+        on_delete=models.PROTECT,
+        verbose_name="Rol",
+        blank=True,
+        null=True
+    )
+
     class Meta:
         """Meta options for the User model."""
 
@@ -53,16 +77,17 @@ class User(AbstractUser):
         verbose_name = "User"
         verbose_name_plural = "Users"
         db_table = "user"
+        unique_together = ('username', 'email')
 
     def __str__(self):
         return self.username
 
     def get_full_name(self):
-        name = f"{self.name} {self.paternal_surname} {self.maternal_surname}"
+        name = f"{self.first_name} {self.last_name}"
         return name.strip()
 
     def get_short_name(self):
-        return self.name
+        return self.first_name
 
     def save(self, *args, **kwargs):
         if not self.slug:

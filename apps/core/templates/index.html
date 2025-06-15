@@ -1,0 +1,10 @@
+<h1>CodeNews</h1>
+
+<h2>Usuario: {{ request.user.username }}</h2>
+<a href="{% url 'users:login' %}">Iniciar sesión</a>
+<a href="{% url 'users:register' %}" >Regitrarse</a>
+<form method="post" action="{% url 'users:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Cerrar sesión</button>
+</form>
+
