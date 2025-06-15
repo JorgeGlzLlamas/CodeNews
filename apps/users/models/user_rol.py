@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import Group
-from users.models.user import User
 
 
 class Rol(models.Model):
@@ -31,33 +30,3 @@ class Rol(models.Model):
 
     def __str__(self):
         return self.rol
-
-
-class UserRol(models.Model):
-    """Manages the user's roles."""
-
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="user_roles",
-        verbose_name="Usuario"
-    )
-
-    rol = models.ForeignKey(
-        Rol,
-        on_delete=models.PROTECT,
-        related_name="user_roles",
-        verbose_name="Rol"
-    )
-
-    class Meta:
-        """Meta options for the UserRol model."""
-
-        app_label = "users"
-        verbose_name = "Rol de Usuario"
-        verbose_name_plural = "Roles de Usuario"
-        db_table = "user_rol"
-        unique_together = (("user", "rol"))
-
-    def __str__(self):
-        return f"{self.user.username} - {self.rol.rol}"
