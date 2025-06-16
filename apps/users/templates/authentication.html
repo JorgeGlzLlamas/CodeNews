@@ -1,6 +1,23 @@
 <h1>Inicio de sesión</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div>
+        <div>Nombre de usuario</div>
+        <div>{{ form.username}}</div>
+        {% if form.username.errors %}
+            <div>
+                {{ form.username.errors|join:", " }}
+            </div>
+        {% endif %}
+    </div>
+    <div>
+        <div>Contraseña</div>
+        <div>{{ form.password }}</div>
+        {% if form.password.errors %}
+            <div>
+                {{ form.password.errors|join:", " }}
+            </div>
+        {% endif %}
+    </div>
     <button type="submit">Iniciar sesión</button>
 </form>
