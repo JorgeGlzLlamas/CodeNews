@@ -56,4 +56,14 @@
         {% endif %}
     </div>
     <button type="submit">Registrate</button>
+
 </form>
+
+<div >
+    <p>O registrate con:</p>
+    <a href="{% url 'social:begin' 'google-oauth2' %}">
+        <button type="button" >
+            Registrate con Google
+        </button>
+    </a>
+</div>
