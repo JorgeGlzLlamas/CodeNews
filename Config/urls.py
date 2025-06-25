@@ -10,12 +10,9 @@ urlpatterns = [
     path('usuario/', include('users.urls')),
     path('articulos/', include('articles.urls')),
     path('comentarios/', include('comments.urls')),
-    path('social-auth/', include('social_django.urls', namespace='social')),
-
 ]
 
 if settings.DEBUG:
     urlpatterns += static(
             settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
         )
-
