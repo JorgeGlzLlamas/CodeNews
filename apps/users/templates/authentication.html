@@ -21,12 +21,3 @@
     </div>
     <button type="submit">Iniciar sesión</button>
 </form>
-
-<div >
-    <p>O inicia sesión con:</p>
-    <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.GET.next }}">
-        <button type="button" >
-            Iniciar sesión con Google
-        </button>
-    </a>
-</div>
