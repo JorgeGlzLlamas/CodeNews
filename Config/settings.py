@@ -62,9 +62,9 @@ THIRD_PARTY_APP = [
 ]
 
 INSTALLED_APPS = [
-    *DEFAULT_APP, 
-    *CREATED_APP, 
-    *THIRD_PARTY_APP, 
+    *DEFAULT_APP,
+    *CREATED_APP,
+    *THIRD_PARTY_APP,
     'social_django',
 ]
 
@@ -176,8 +176,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Configuración para Google OAuth2
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env.str('GOOGLE_OAUTH2_CLIENT_ID')  # Tu Client ID de Google
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env.str('GOOGLE_OAUTH2_CLIENT_SECRET')  # Tu Client Secret de Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env.str('GOOGLE_OAUTH2_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env.str('GOOGLE_OAUTH2_CLIENT_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {'access_type': 'offline'}
 
@@ -187,7 +187,7 @@ SESSION_SAVE_EVERY_REQUEST = True  # Renovar sesión con cada actividad
 
 # URL de redirección después del login
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/complete-profile/'  
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/complete-profile/'
 
 # Pipeline para manejar la autenticación social
 SOCIAL_AUTH_PIPELINE = (

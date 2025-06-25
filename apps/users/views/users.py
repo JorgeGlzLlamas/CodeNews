@@ -3,10 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import AuthenticationForm
 from users.forms.user_form import UserRegistrationForm
-from django.contrib.auth import authenticate
 from django.contrib import messages
-from django.utils import timezone
-from datetime import timedelta
 from django.contrib.auth.views import LogoutView
 from users.models.user import User
 from users.models.user_rol import Rol
@@ -26,9 +23,10 @@ class RegistrationView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        if form.errors.get('__all__') and any('existing_user' in str(e) for e in form.errors['__all__']):
-            messages.success(self.request, '¡Tu cuenta ya estaba registrada! Has iniciado sesión automáticamente.')
-            return redirect('core:home')
+        messages.success(
+            self.request,
+            '¡Tu cuenta ya estaba registrada!.'
+        )
         return super().form_invalid(form)
 
     def get_success_url(self):
@@ -47,6 +45,7 @@ class AuthenticationView(LoginView):
 
     def get_success_url(self):
         return reverse('core:home')
+
 
 class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
