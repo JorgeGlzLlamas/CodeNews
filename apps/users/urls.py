@@ -14,5 +14,8 @@ urlpatterns = [
          name='login'),
     path('cerrar-sesion/',
          LogoutView.as_view(next_page='core:home'),
-         name='logout')
+         name='logout'),
+    path('cambiar-contrasena/',
+         users.CustomPasswordChangeView.as_view(),
+         name='change_password')
 ]
