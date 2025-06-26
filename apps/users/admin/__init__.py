@@ -1,6 +1,6 @@
-from users.admin.admin import CustomUserAdmin
+from users.admin.rol import RolAdmin
 
 
-all = [
-    CustomUserAdmin
+__all__ = [
+    RolAdmin
 ]
