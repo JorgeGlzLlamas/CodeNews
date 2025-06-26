@@ -1,10 +1,10 @@
 from django.urls import reverse
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import AuthenticationForm
 from users.forms.user_form import UserRegistrationForm
 from django.contrib import messages
-from django.contrib.auth.views import LogoutView
 from users.models.user import User
 from users.models.user_rol import Rol
 
@@ -47,9 +47,24 @@ class AuthenticationView(LoginView):
         return reverse('core:home')
 
 
-class CustomLogoutView(LogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        # Limpiar la sesión persistente
-        if 'user_id' in request.session:
-            del request.session['user_id']
-        return super().dispatch(request, *args, **kwargs)
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    """Change password view for users."""
+    template_name = 'change_password.html'
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            '¡Tu contraseña ha sido cambiada!'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            '¡Hubo un error al cambiar tu contraseña!'
+        )
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        # Cambiar la URL de redirección a perfil de usuario
+        return reverse('core:home')
