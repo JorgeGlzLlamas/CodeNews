@@ -1,6 +1,10 @@
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
@@ -149,3 +153,24 @@ class AvatarUpdateView(LoginRequiredMixin, UpdateView):
             messages.error(request, f'Error al actualizar el avatar: {str(e)}')
 
         return redirect(self.success_url)
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    """Change password view for users."""
+    template_name = 'change_password.html'
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            '¡Tu contraseña ha sido cambiada!'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            '¡Hubo un error al cambiar tu contraseña!'
+        )
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        # Cambiar la URL de redirección a perfil de usuario
+        return reverse('core:home')

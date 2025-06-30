@@ -30,3 +30,7 @@ urlpatterns = [
          users.AvatarUpdateView.as_view(),
          name='delete_avatar'),
 ]
+    path('cambiar-contrasena/',
+         users.CustomPasswordChangeView.as_view(),
+         name='change_password')
+]
