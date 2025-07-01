@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
 import os
 
@@ -92,6 +93,17 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.username)
+        try:
+            old_avatar = User.objects.get(pk=self.pk).avatar_image
+        except User.DoesNotExist:
+            old_avatar = None
+
+        # Eliminar el avatar anterior si no es el predeterminado y ha cambiado
+        if (old_avatar and old_avatar.name != 'usuarios/avatars/default.png'
+                and old_avatar != self.avatar_image):
+            if default_storage.exists(old_avatar.name):
+                default_storage.delete(old_avatar.name)
+
         super().save(*args, **kwargs)
 
     def _validate_avatar_extension(self):

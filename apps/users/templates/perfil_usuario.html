@@ -1,63 +1,52 @@
 <h1>Perfil de Usuario</h1>
 
 <div>
-    <!-- Sección del Avatar -->
-    <div>
-        <h2>Avatar</h2>
-        {% if user.avatar_image %}
-            <img src="{{ user.avatar_image.url }}" alt="Avatar" width="150">
-        {% else %}
-            <img src="/media/usuarios/avatars/default.png" alt="Avatar por defecto" width="150">
-        {% endif %}
-        
-        <form method="post" enctype="multipart/form-data" action="{% url 'users:update_avatar' %}">
-            {% csrf_token %}
-            <input type="file" name="avatar_image" accept="image/*">
-            <button type="submit">Actualizar Avatar</button>
-        </form>
-        
-        {% if user.avatar_image %}
-        <form method="post" action="{% url 'users:delete_avatar' %}">
-            {% csrf_token %}
-            <button type="submit">Eliminar Avatar</button>
-        </form>
-        {% endif %}
-    </div>
 
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
     <!-- Formulario de datos del usuario -->
     <div>
         <h2>Datos Personales</h2>
-        <form method="post" action="{% url 'users:update_profile' %}">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
+            <div>
+                <h2>Avatar</h2>
+                {{ form.avatar_image }}
+            </div>
             <div>
                 <label>Nombre de usuario:</label>
-                <input type="text" value="{{ user.username }}" readonly>
+                {{ request.user.username  }}
             </div>
             
             <div>
                 <label>Email:</label>
-                <input type="email" name="email" value="{{ user.email }}" required>
+                {{ form.email }}
             </div>
             
             <div>
                 <label>Nombre:</label>
-                <input type="text" name="first_name" value="{{ user.first_name }}" required>
+                {{ form.first_name }}
             </div>
             
             <div>
                 <label>Apellido:</label>
-                <input type="text" name="last_name" value="{{ user.last_name }}" required>
+                {{ form.last_name }}
             </div>
             
             <div>
                 <label>Teléfono:</label>
-                <input type="text" name="phone" value="{{ user.phone|default:'' }}">
+                {{ form.phone }}
             </div>
             
             <div>
                 <label>Biografía:</label>
-                <textarea name="bio">{{ user.bio|default:'' }}</textarea>
+                {{ form.bio }}
             </div>
             
             <button type="submit">Guardar Cambios</button>
