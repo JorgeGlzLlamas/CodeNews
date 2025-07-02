@@ -80,6 +80,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     form_class = UserProfileForm
     template_name = 'perfil_usuario.html'
 
+    def get_form_kwargs(self):
+        """Pasa el usuario actual al formulario."""
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
     def form_valid(self, form):
         messages.success(self.request, '¡Perfil actualizado correctamente!')
         return super().form_valid(form)
