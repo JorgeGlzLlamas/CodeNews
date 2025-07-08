@@ -1,15 +1,14 @@
 from django.urls import reverse
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 
-
 from users.forms.user_form import UserRegistrationForm
-from users.forms.perfil_usuario import UserProfileForm
 from users.models.user import User
 from users.models.user_rol import Rol
+from users.models.user_privacity import UserPrivacy
 
 
 class RegistrationView(CreateView):
@@ -23,6 +22,8 @@ class RegistrationView(CreateView):
         user = form.save(commit=False)
         user.rol = Rol.objects.get(pk=1)  # Rol 1 = Usuario
         user.save()
+        # Crear instancia para privacidad de usuario
+        UserPrivacy.objects.create(user=user)
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -73,26 +74,8 @@ class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
         return reverse('core:home')
 
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    """Update profile view."""
 
-    model = User
-    form_class = UserProfileForm
-    template_name = 'perfil_usuario.html'
-
-    def get_form_kwargs(self):
-        """Pasa el usuario actual al formulario."""
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
     
-    def form_valid(self, form):
-        messages.success(self.request, '¡Perfil actualizado correctamente!')
-        return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(self.request, '¡Hubo un error al actualizar tu perfil!')
-        return super().form_invalid(form)
 
-    def get_success_url(self):
-        return reverse('users:profile', kwargs={'pk': self.request.user.pk})
+
