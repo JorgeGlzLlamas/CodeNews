@@ -1,0 +1,44 @@
+<!-- Formulario de datos del usuario -->
+<div>
+    <h2>Información del perfil</h2>
+    <form method="post" action={% url 'users:profile_update' user.slug %}
+        enctype="multipart/form-data">
+        {% csrf_token %}
+            <div>
+                <label>Avatar</label>
+                {{ form.avatar_image }}
+            </div>
+            <div>
+                <label>Nombre de usuario:</label>
+                {{ form.username }}
+            </div>
+            
+            <div>
+                <label>Email:</label>
+                {{ form.email }}
+            </div>
+            
+            <div>
+                <label>Nombre:</label>
+                {{ form.first_name }}
+            </div>
+            
+            <div>
+                <label>Apellido:</label>
+                {{ form.last_name }}
+            </div>
+            
+            <div>
+                <label>Teléfono:</label>
+                {{ form.phone }}
+            </div>
+            
+            <div>
+                <label>Biografía:</label>
+                {{ form.bio }}
+            </div>
+            {% if can_edit%}
+                <button type="submit">Guardar Cambios</button>
+            {% endif %}
+    </form>
+</div>

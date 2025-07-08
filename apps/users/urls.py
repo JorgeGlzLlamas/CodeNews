@@ -1,26 +1,33 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from users.views import users
+from apps.users.views import authentication
+from users.views import user_profile
 
 app_name = 'users'
 
 urlpatterns = [
     # Authentication URLs
     path('registro/',
-         users.RegistrationView.as_view(),
+         authentication.RegistrationView.as_view(),
          name='register'),
     path('inicio-sesion/',
-         users.AuthenticationView.as_view(),
+         authentication.AuthenticationView.as_view(),
          name='login'),
     path('cerrar-sesion/',
          LogoutView.as_view(next_page='core:home'),
          name='logout'),
     path('cambiar-contrasena/',
-         users.CustomPasswordChangeView.as_view(),
+         authentication.CustomPasswordChangeView.as_view(),
          name='change_password'),
 
     # Profile URLs
-    path('perfil/<int:pk>/',
-         users.ProfileUpdateView.as_view(),
+    path('<slug:username>/perfil/',
+         user_profile.ProfileDetailView.as_view(),
          name='profile'),
+    path('<slug:username>/editar-perfil/',
+         user_profile.ProfileUpdateView.as_view(),
+         name='profile_update'),
+    path('<slug:username>/editar-privacidad/',
+         user_profile.ProfilePrivacyView.as_view(),
+         name='profile_privacy')
 ]

@@ -1,0 +1,27 @@
+<!-- Formulario de configuración de privacidad de usuario  -->
+<div>
+    <h2>Configuración de Privacidad</h2>
+    <form method="post" action={% url 'users:profile_privacy' user.slug %}>
+        {% csrf_token %}
+            <div>
+                <label>Nombre público</label>
+                {{ form.username_or_name }}
+            </div>
+            <div>
+                <label>Correo electrónico</label>
+                {{ form.email_is_public }}
+            </div>
+            
+            <div>
+                <label>Número de teléfono</label>
+                {{ form.phone_is_public }}
+            </div>
+            <div>
+                <label>Biografía</label>
+                {{ form.bio_is_public }}
+            </div>
+            {% if can_edit%}
+                <button type="submit">Guardar Cambios</button>
+            {% endif %}
+    </form>
+</div>
