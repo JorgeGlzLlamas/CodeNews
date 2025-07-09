@@ -1,14 +1,13 @@
-<h1>Perfil de Usuario</h1>
+{% extends 'base.html' %}
 
+{% block title %} Perfil de Usuario {% endblock %}
+
+{% block content%}
+<h1>Perfil de Usuario</h1>
+{% include 'partials/messages.html'%}
 <div>
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     <a href="{% url 'core:home' %}">Volver al inicio</a>
     {% include 'partials/profile_form.html' with form=profile_form %}
     {% include 'partials/profile_privacy_form.html' with form=privacy_form %}
 </div>
+{% endblock %}

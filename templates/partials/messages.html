@@ -1,0 +1,35 @@
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == "error" %}
+            {% with "danger" as alert_tag %}
+                <div class="alert alert-important alert-{{ alert_tag }} alert-dismissible" role="alert">
+                    <div class="d-flex">
+                        <div>
+                            <i class="ti ti-exclamation-circle me-2"></i>
+                        </div>
+                        <div>{{ message }}</div>
+                    </div>
+                    <a class="btn-close" data-bs-dismiss="alert" aria-label="Close"></a>
+                </div>
+            {% endwith %}
+        {% else %}
+            {% with message.tags as alert_tag %}
+                <div class="alert alert-important alert-{{ alert_tag }} alert-dismissible" role="alert">
+                    <div class="d-flex">
+                        <div>
+                            {% if alert_tag == "success" %}
+                                <i class="ti ti-check me-2"></i>
+                            {% elif alert_tag == "warning" %}
+                                <i class="ti ti-alert-triangle me-2"></i>
+                            {% elif alert_tag == "info" %}
+                                <i class="ti ti-info-circle me-2"></i>
+                            {% endif %}
+                        </div>
+                        <div>{{ message }}</div>
+                    </div>
+                    <a class="btn-close" data-bs-dismiss="alert" aria-label="Close"></a>
+                </div>
+            {% endwith %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
