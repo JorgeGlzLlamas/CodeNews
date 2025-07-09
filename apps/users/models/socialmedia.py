@@ -13,6 +13,8 @@ class SocialMedia(models.Model):
         LINKEDIN = "linkedin", "LinkedIn"
         TWITTER = "twitter", "Twitter"
         INSTAGRAM = "instagram", "Instagram"
+        YOUTUBE = "youtube", "YouTube"
+        OTHER = "other", "Otro"
 
     user = models.ForeignKey(
         User,
