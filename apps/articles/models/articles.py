@@ -1,8 +1,22 @@
+import os
+from uuid import uuid4
 from django.db import models
 from users.models.user import User
 from articles.models.articles_category import ArticlesCategory
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+
+
+def article_thumbnail_upload_to(instance, filename):
+    """Renombra la imagen usando el slug del artículo."""
+    ext = filename.split('.')[-1]
+
+    # Asegúrate de que el slug esté disponible (si aún no está guardado)
+    slug = instance.slug or slugify(instance.title)
+
+    # Opcionalmente, añade un UUID para evitar colisiones
+    filename = f'{slug}-{uuid4().hex[:8]}.{ext}'
+    return os.path.join('articles', 'thumbnails', filename)
 
 
 class Articles(models.Model):
@@ -54,7 +68,7 @@ class Articles(models.Model):
     )
 
     thumbnail_image = models.ImageField(
-        upload_to='articles/thumbnails/',
+        upload_to=article_thumbnail_upload_to,
         verbose_name='Imagen en miniatura del Artículo',
         blank=True,
     )
@@ -107,9 +121,22 @@ class Articles(models.Model):
 
     def save(self, *args, **kwargs):
         """Override save method to auto-generate slug from title."""
+        try:
+            this = Articles.objects.get(id=self.id)
+            if this.thumbnail_image != self.thumbnail_image:
+                this.thumbnail_image.delete(save=False)
+        except Articles.DoesNotExist:
+            pass
+
         self.title = self.title.strip()
         if not self.slug:
             self.slug = slugify(self.title)
 
         self.full_clean()
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.thumbnail_image:
+            self.thumbnail_image.delete(save=False)
+        super().delete(*args, **kwargs)
+
