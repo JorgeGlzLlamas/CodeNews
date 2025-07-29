@@ -1,0 +1,21 @@
+<h1>Nuevo artículo</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Título</label>
+        {{ form.title}}
+    </div>
+    <div>
+        <label>Categoría</label>
+        {{ form.category }}
+    </div>
+    <div>
+        <label>Descripción</label>
+        {{ form.description}}
+    </div>
+    <div>
+        <label>Imagen</label>
+        {{ form.thumbnail_image }}
+    </div>
+    <button type="submit">Continuar</button>
+</form>

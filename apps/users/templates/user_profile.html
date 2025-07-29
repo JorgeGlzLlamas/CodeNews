@@ -7,6 +7,7 @@
 {% include 'partials/messages.html'%}
 <div>
     <a href="{% url 'core:home' %}">Volver al inicio</a>
+    <a href="{% url 'articles:article_create' %}">Crear artículo</a>
     {% include 'partials/profile_form.html' with form=profile_form %}
     {% include 'partials/profile_privacy_form.html' with form=privacy_form %}
 </div>
