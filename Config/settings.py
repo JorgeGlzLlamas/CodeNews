@@ -82,7 +82,11 @@ ROOT_URLCONF = 'Config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< Updated upstream
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
+=======
+        'DIRS': [BASE_DIR / 'templates'],
+>>>>>>> Stashed changes
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,6 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+
 
 # Directorio donde se recopilarán los archivos estáticos para producción
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

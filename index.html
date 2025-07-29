@@ -1,0 +1,111 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CodeNews | Inicio Sesión</title>
+    <meta name="description"
+        content="Tailwind CSS Saas HTML Template Is A Multi Purpose Landing Page Template, Corporate, Authentication, Launching Web, Agency or Business Startup, Clean, Modern, Creative, Multipurpose and Tailwind CSS Tailwind v3 etc." />
+    <meta name="author" content="Zoyothemes" />
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/img/logo/Logo_CN.png' %}" type="image/x-icon" />
+
+    <!-- Main Css -->
+    <link href="{% static 'dist/assets/css/style.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <!-- =========== Main Section Start =========== -->
+    <section class="h-screen w-full">
+        <div class="grid xl:grid-cols-2 grid-cols-1 h-full">
+            <div class="max-w-lg mx-auto w-full flex flex-col justify-center md:items-start items-center p-6">
+                <div class="md:text-start text-center mb-7">
+                    <a href="index.html" class="grow block mb-8">
+                        <img class="img-fluid mx-auto md:mx-0 d-block" src="assets/img/logo/cdnews.png" alt="images"
+                            style="width: 120px; height: auto;">
+                    </a>
+
+                    <div class="md:text-start text-center">
+                        <h3 class="text-2xl font-semibold text-dark mb-3">Bienvenido a Code News</h3>
+                        <p class="text-base font-medium text-light">¡Bienvenido de nuevo! Selecciona el método de
+                            registro.</p>
+                    </div>
+                </div>
+
+                <form class="text-start w-full">
+                    <div class="flex md:justify-between justify-center items-center mb-8 md:gap-9 gap-2">
+                        <button type="submit"
+                            class="w-full inline-flex items-center justify-center px-6 gap-4 py-2.5 font-medium backdrop-blur-2xl border border-gray-300 bg-white text-dark rounded-md transition-all duration-500">
+                            <img src="Inicios de Sesión/dist/assets/images/google.png" alt=""
+                                class="max-w-5 h-5 text-dark ">Google
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="email-addon" class="block text-base font-semibold text-dark mb-2">Dirección de
+                            correo electrónico</label>
+                        <input id="email-addon"
+                            class="block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light placeholder:text-base"
+                            type="email" placeholder="Ingresa tu correo electrónico">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password-addon"
+                            class="block text-base font-semibold text-dark mb-2">Contraseña</label>
+                        <div class="flex">
+                            <input type="password" id="password-addon"
+                                class="form-password text-dark text-base font-medium block w-full rounded-s-md py-2.5 px-4 border border-gray-300 focus:gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light placeholder:text-base"
+                                placeholder="Ingresa tu contraseña">
+                            <button type="button" data-hs-toggle-password='{"target": "#password-addon"}'
+                                class="inline-flex items-center justify-center py-2.5 px-4 border rounded-e-md -ms-px border-gray-300">
+                                <i class="hs-password-active:hidden h-5 w-5 text-dark" data-lucide="eye"></i>
+                                <i data-lucide="eye-off" class="hidden hs-password-active:block h-5 w-5 text-dark"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center flex-wrap gap-x-1 gap-y-2 mb-6 mt-3">
+                        <div class="inline-flex items-center">
+                            <input type="checkbox" id="checkbox-signin"
+                                class="h-4 w-4 text-base rounded border-gray-300 text-dark focus:ring focus:ring-default-950/30 focus:ring-offset-0">
+                            <label class="text-base ms-2 text-light font-medium align-middle select-none"
+                                for="checkbox-signin">Recuerdame</label>
+                        </div>
+                        <a href="auth-recoverpw.html" class="text-base text-dark"><small>Olvidaste tu
+                                contraseña?</small></a>
+                    </div>
+
+                    <div class="text-center mb-7">
+                        <button type="submit"
+                            class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-primary font-bold text-base text-white rounded-md transition-all duration-500"
+                            type="submit">Iniciar Sesión</button>
+                    </div>
+
+                    <p class="shrink text-light text-center">No tienes cuenta ?<a href="auth-register.html"
+                            class="text-dark font-semibold ms-1"><b>Registrate</b></a></p>
+                </form>
+            </div>
+
+            <div class="hidden xl:block">
+                <div class="relative w-full h-screen bg-center bg-cover"
+                    style="background-image: url('assets/img/logins/login.jpg');"></div>
+            </div>
+        </div>
+
+    </section>
+    <!-- =========== Main Section End =========== -->
+
+    <!-- Preline Js -->
+    <script src="Inicios de Sesión/dist/assets/libs/preline/preline.js"></script>
+
+    <!-- Lucide Js -->
+    <script src="Inicios de Sesión/dist/assets/libs/lucide/umd/lucide.min.js"></script>
+
+    <!-- Main App Js -->
+    <script src="Inicios de Sesión/dist/assets/js/app.js"></script>
+
+</body>
