@@ -1,0 +1,33 @@
+<h1>Artículo</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Título</label>
+        {{ form.title}}
+    </div>
+    <div>
+        <label>Categoría</label>
+        {{ form.category }}
+    </div>
+    <div>
+        <label>Status</label>
+        {{ form.status }}
+    </div>
+    <div>
+        <label>Fecha de Publicación</label>
+        <input type="date" name="form.published_at.name" 
+            value="{{ form.published_at.value|date:'Y-m-d' }}">
+    </div>
+    <div>
+        <label>Descripción</label>
+        {{ form.description}}
+    </div>
+    <div>
+        <label>Imagen</label>
+        {{ form.thumbnail_image }}
+    </div>
+    <button type="submit">Guardar</button>
+    <a href="{% url 'articles:set_update_flag' slug=article.slug %}">
+        Editar contenido del artículo
+    </a>
+</form>

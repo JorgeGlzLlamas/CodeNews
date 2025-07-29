@@ -1,0 +1,23 @@
+<form method="post">
+    {% csrf_token %}
+    {% if form.published_at %}
+        <div class="form-group">
+            <label>Fecha de Publicación</label>
+            <input type="date" name="form.published_at.name" 
+                value="{{ form.published_at.value|date:'Y-m-d' }}">
+        </div>
+    {% endif %}
+
+    {% if form.status %}
+        <div class="form-group">
+            <label>Status</label>
+            {{ form.status }}
+        </div>
+    {% endif %}
+
+    <div class="form-group">
+        <label>Contenido del artículo</label>
+        {{ form.content }}
+    </div>
+    <button type="submit">Guardar</button>
+</form>
