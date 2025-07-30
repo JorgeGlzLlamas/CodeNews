@@ -1,0 +1,21 @@
+/* Template Name: Authea - Tailwind CSS Authentication Pages Template
+   Author: Zoyothemes
+   Email: zoyothemes@gmail.com
+   Website: http://zoyothemes.com/
+   Version: 1.0.0
+   Created: January 2024
+   File: Main Css File
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+// General
+@import "custom/general";
+
+// Pages
+@import "custom/pages/helper";

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @@include("partials/title-meta.html", {"title": "Opsoon"})
+
+    @@include("partials/head-css.html")
+</head>
+
+<body>
+    <!-- =========== Main Section Start =========== -->
+    <section class="relative h-screen w-full flex items-center justify-center bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-[#ccf9df] to-[#d1d6ff]">
+        <div class="relative max-w-lg md:mx-auto mx-6 w-full flex flex-col justify-center bg-white rounded-lg p-6">
+            <div class="text-start mb-7">
+                <a href="index.html" class="grow block mb-8">
+                    <img class="h-8 mx-auto" src="assets/images/light-logo.png" alt="images">
+                </a>
+
+                <div class="text-center">
+                    <h3 class="text-2xl font-semibold text-dark mb-3">Welcome to authea</h3>
+                    <p class="text-base font-medium text-light">Welcome back! Select method to sign up</p>
+                </div>
+            </div>
+
+            <form class="text-start w-full">
+                <div class="mb-4">
+                    <label for="email-addon" class="block text-base font-semibold text-dark mb-2">Email address</label>
+                    <input id="email-addon" class="block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light placeholder:text-base" type="email" placeholder="Enter your email">
+                </div>
+
+                <div class="mb-4">
+                    <label for="password-addon" class="block text-base font-semibold text-dark mb-2">Password</label>
+                    <div class="flex">
+                        <input type="password" id="password-addon" class="form-password text-dark text-base font-medium block w-full rounded-s-md py-2.5 px-4 border border-gray-300 focus:gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light placeholder:text-base" placeholder="Enter your password">
+                        <button type="button" data-hs-toggle-password='{"target": "#password-addon"}' class="inline-flex items-center justify-center py-2.5 px-4 border rounded-e-md -ms-px border-gray-300">
+                            <i class="hs-password-active:hidden h-5 w-5 text-dark" data-lucide="eye"></i>
+                            <i data-lucide="eye-off" class="hidden hs-password-active:block h-5 w-5 text-dark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center flex-wrap gap-x-1 gap-y-2 mb-6 mt-3">
+                    <div class="inline-flex items-center">
+                        <input type="checkbox" id="checkbox-signin" class="h-4 w-4 text-base rounded border-gray-300 text-dark focus:ring focus:ring-default-950/30 focus:ring-offset-0">
+                        <label class="text-base ms-2 text-light font-medium align-middle select-none" for="checkbox-signin">Remember me</label>
+                    </div>
+                    <a href="auth-recoverpw.html" class="text-base text-dark"><small>Forgot your password?</small></a>
+                </div>
+
+                <div class="text-center mb-7">
+                    <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-primary font-bold text-base  text-white rounded-md transition-all duration-500" type="submit">Log In </button>
+                </div>
+
+                <div class="flex items-center my-6">
+                    <div class="flex-auto mt-px border-t border-dashed border-gray-800"></div>
+                    <div class="mx-4 text-dark">Or</div>
+                    <div class="flex-auto mt-px border-t border-dashed border-gray-800"></div>
+                </div>
+
+                <div class="flex md:justify-between justify-center items-center mb-8 md:gap-9 gap-2">
+                    <button type="submit" class="w-full inline-flex items-center justify-center px-6 gap-4 py-2.5 font-medium backdrop-blur-2xl border border-gray-300 bg-white text-dark rounded-md transition-all duration-500">
+                        <img src="assets/images/google.png" alt="" class="max-w-5 h-5 text-dark ">Google
+                    </button>
+                    <button type="submit" class="w-full inline-flex items-center justify-center px-6 gap-4 py-2.5 font-medium backdrop-blur-2xl border border-gray-300 bg-white text-dark rounded-md transition-all duration-500 group"><img src="assets/images/facebook.png" alt="" class="max-w-5 h-5 text-dark">Facebook</button>
+                </div>   
+
+                <p class="shrink text-light text-center">Don't have an account ?<a href="auth-register.html" class="text-dark font-semibold ms-1"><b>Register</b></a></p>
+            </form>
+        </div>
+    </section>
+    <!-- =========== Main Section End =========== -->
+    
+    @@include("partials/script-file.html")
+
+    </body>
+</html>
