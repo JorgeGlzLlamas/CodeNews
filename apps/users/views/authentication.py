@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 
-from users.forms.user_form import UserRegistrationForm
+from users.forms.user_form import UserRegistrationForm, LoginForm
 from users.models.user import User
 from users.models.user_rol import Rol
 from users.models.user_privacity import UserPrivacy
@@ -39,7 +39,7 @@ class RegistrationView(CreateView):
 
 class AuthenticationView(LoginView):
     """Authentication view for users."""
-    authentication_form = AuthenticationForm
+    authentication_form = LoginForm
     template_name = 'authentication.html'
 
     def form_valid(self, form):
@@ -72,10 +72,4 @@ class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     def get_success_url(self):
         # Cambiar la URL de redirección a perfil de usuario
         return reverse('core:home')
-
-
-
-    
-
-
 

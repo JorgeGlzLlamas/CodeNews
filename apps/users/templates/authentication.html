@@ -1,23 +1,76 @@
-<h1>Inicio de sesión</h1>
-<form method="post">
-    {% csrf_token %}
-    <div>
-        <div>Nombre de usuario</div>
-        <div>{{ form.username}}</div>
-        {% if form.username.errors %}
-            <div>
-                {{ form.username.errors|join:", " }}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CodeNews | Inicio Sesión</title>
+    <meta name="description" content="Tailwind CSS Saas HTML Template Is A Multi Purpose Landing Page Template, Corporate, Authentication, Launching Web, Agency or Business Startup, Clean, Modern, Creative, Multipurpose and Tailwind CSS Tailwind v3 etc." />
+    <meta name="author" content="Zoyothemes" />
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/dist/assets/images/Logos/Logo_CN.png' %}" type="image/x-icon" />
+
+    <!-- Main Css -->
+    <link href="{% static 'assets/dist/assets/css/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!-- =========== Main Section Start =========== -->
+    <section class="h-screen w-full">
+      <div class="grid xl:grid-cols-2 grid-cols-1 h-full w-full">
+        <div class="max-w-lg mx-auto w-full flex flex-col justify-center md:items-start items-center p-6">
+          <div class="md:text-start text-center mb-7">
+            <a href="index.html" class="grow block mb-8"><img class="img-fluid mx-auto md:mx-0 d-block" src="{% static 'assets/img/logo/cdnews.png' %}" alt="images" style="width: 120px; height: auto;" /></a>
+            <div class="md:text-start text-center">
+              <h3 class="text-2xl font-semibold text-dark mb-3">Bienvenido a Code News</h3>
             </div>
-        {% endif %}
-    </div>
-    <div>
-        <div>Contraseña</div>
-        <div>{{ form.password }}</div>
-        {% if form.password.errors %}
+          </div>
+
+          <h1 class="text-center text-2xl font-bold mb-6">Inicio de sesión</h1>
+          <form method="post" class="space-y-4 w-full">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+              <div class="bg-red-100 text-red-700 p-3 rounded">{{ form.non_field_errors|join:', ' }}</div>
+            {% endif %}
+
             <div>
-                {{ form.password.errors|join:", " }}
+              {{ form.username.label_tag }}
+              {{ form.username }}
+              {% if form.username.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.username.errors|join:', ' }}</p>
+              {% endif %}
             </div>
-        {% endif %}
-    </div>
-    <button type="submit">Iniciar sesión</button>
-</form>
+
+            <div>
+              {{ form.password.label_tag }}
+              {{ form.password }}
+              {% if form.password.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.password.errors|join:', ' }}</p>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="w-full px-6 py-2.5 bg-primary text-white rounded-md">Iniciar sesión</button>
+            <p class="shrink text-light text-center">
+            ¿No tienes cuenta?
+            <a href="{% url 'users:register' %}" class="text-dark font-semibold ms-1"><b>Regístrate</b></a>
+          </p>
+          </form>
+          
+        </div>
+
+        <div class="hidden xl:block">
+          <div class="relative w-full h-screen bg-center bg-cover" style="background-image: url('{% static 'assets/img/logins/login.jpg' %}');"></div>
+        </div>
+      </div>
+    </section>
+    <!-- =========== Main Section End =========== -->
+    <!-- Preline Js -->
+    <script src="{% static 'assets/dist/assets/libs/preline/preline.js' %}"></script>
+
+    <!-- Lucide Js -->
+    <script src="{% static 'assets/dist/assets/libs/lucide/umd/lucide.min.js' %}"></script>
+
+    <!-- Main App Js -->
+    <script src="{% static 'assets/dist/assets/js/app.js' %}"></script>
+  </body>
+</html>
