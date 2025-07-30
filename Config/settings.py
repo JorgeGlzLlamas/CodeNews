@@ -82,11 +82,7 @@ ROOT_URLCONF = 'Config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-<<<<<<< Updated upstream
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
-=======
-        'DIRS': [BASE_DIR / 'templates'],
->>>>>>> Stashed changes
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

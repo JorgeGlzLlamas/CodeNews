@@ -3,13 +3,9 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
-<<<<<<< Updated upstream:apps/users/views/authentication.py
-=======
-from users.forms.user_form import UserRegistrationForm, LoginForm
->>>>>>> Stashed changes:apps/users/views/users.py
 from django.contrib import messages
 
-from users.forms.user_form import UserRegistrationForm
+from users.forms.user_form import UserRegistrationForm, LoginForm
 from users.models.user import User
 from users.models.user_rol import Rol
 from users.models.user_privacity import UserPrivacy
@@ -55,7 +51,6 @@ class AuthenticationView(LoginView):
         return reverse('core:home')
 
 
-<<<<<<< Updated upstream:apps/users/views/authentication.py
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     """Change password view for users."""
     template_name = 'change_password.html'
@@ -78,16 +73,3 @@ class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
         # Cambiar la URL de redirección a perfil de usuario
         return reverse('core:home')
 
-
-
-    
-
-
-
-=======
-class CustomLogoutView(LogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        if 'user_id' in request.session:
-            del request.session['user_id']
-        return super().dispatch(request, *args, **kwargs)
->>>>>>> Stashed changes:apps/users/views/users.py
