@@ -1,27 +1,202 @@
-<!-- Formulario de configuración de privacidad de usuario  -->
-<div>
-    <h2>Configuración de Privacidad</h2>
-    <form method="post" action={% url 'users:profile_privacy' user.slug %}>
-        {% csrf_token %}
-            <div>
-                <label>Nombre público</label>
-                {{ form.username_or_name }}
-            </div>
-            <div>
-                <label>Correo electrónico</label>
-                {{ form.email_is_public }}
-            </div>
+<!-- Formulario de configuración de privacidad de usuario -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="ti ti-shield-lock text-primary me-2"></i>Configuración de Privacidad
+        </h3>
+    </div>
+    <div class="card-body">
+        <form method="post" action={% url 'users:profile_privacy' user.slug %}>
+            {% csrf_token %}
             
-            <div>
-                <label>Número de teléfono</label>
-                {{ form.phone_is_public }}
+            <div class="row g-3">
+                <!-- Configuraciones de privacidad -->
+                <div class="col-12">
+                    <div class="card card-sm">
+                        <div class="card-status-start bg-primary"></div>
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">
+                                <i class="ti ti-eye text-azure me-2"></i>Visibilidad del Perfil
+                            </h4>
+                            <div class="row g-3">
+                                <!-- Nombre público -->
+                                <div class="col-md-6">
+                                    <div class="form-label-icon">
+                                        <label class="form-label">
+                                            <i class="ti ti-id text-azure me-2"></i>Nombre público
+                                        </label>
+                                        <span class="form-help" data-bs-toggle="popover" 
+                                              data-bs-placement="top"
+                                              data-bs-content="Elige cómo quieres que se muestre tu nombre">?</span>
+                                    </div>
+                                    <select class="form-select" name="{{ form.username_or_name.name }}">
+                                        <option value="username">Mostrar nombre de usuario</option>
+                                        <option value="full_name">Mostrar nombre completo</option>
+                                    </select>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-md-6">
+                                    <label class="form-check form-switch py-2">
+                                        {{ form.email_is_public }}
+                                        <span class="form-check-label">
+                                            <i class="ti ti-mail text-azure me-2"></i>Mostrar email público
+                                        </span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Teléfono -->
+                                <div class="col-md-6">
+                                    <label class="form-check form-switch py-2">
+                                        {{ form.phone_is_public }}
+                                        <span class="form-check-label">
+                                            <i class="ti ti-phone text-azure me-2"></i>Mostrar teléfono público
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <!-- Biografía -->
+                                <div class="col-md-6">
+                                    <label class="form-check form-switch py-2">
+                                        {{ form.bio_is_public }}
+                                        <span class="form-check-label">
+                                            <i class="ti ti-book text-azure me-2"></i>Mostrar biografía pública
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div class="col-12">
+                    <div class="card card-sm">
+                        <div class="card-status-start bg-azure"></div>
+                        <div class="card-body">
+                            <h4 class="card-title d-flex align-items-center justify-content-between mb-4">
+                                <span>
+                                    <i class="ti ti-share text-azure me-2"></i>Redes Sociales
+                                </span>
+                                <button type="button" class="btn btn-azure" data-bs-toggle="modal" data-bs-target="#addSocialModal">
+                                    <i class="ti ti-plus me-2"></i>Agregar Red Social
+                                </button>
+                            </h4>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-vcenter">
+                                    <thead>
+                                        <tr>
+                                            <th>Red Social</th>
+                                            <th>Enlace</th>
+                                            <th class="w-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for social in user.social_links.all %}
+                                        <tr>
+                                            <td class="text-muted">
+                                                <i class="ti ti-brand-{{ social.network }} text-azure me-2"></i>
+                                                {{ social.get_network_display }}
+                                            </td>
+                                            <td class="text-muted">
+                                                <a href="{{ social.url }}" target="_blank" class="text-reset">
+                                                    {{ social.url }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-icon btn-outline-danger btn-sm" 
+                                                   onclick="deleteSocialLink('{{ social.id }}')">
+                                                    <i class="ti ti-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label>Biografía</label>
-                {{ form.bio_is_public }}
+
+            {% if can_edit %}
+            <div class="card-footer bg-transparent px-0 pb-0">
+                <div class="btn-list justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-device-floppy me-2"></i>
+                        Guardar Cambios
+                    </button>
+                </div>
             </div>
-            {% if can_edit%}
-                <button type="submit">Guardar Cambios</button>
             {% endif %}
-    </form>
+        </form>
+    </div>
 </div>
+
+<!-- Modal para agregar red social -->
+<div class="modal modal-blur fade" id="addSocialModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ti ti-share text-azure me-2"></i>Agregar Red Social
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="socialForm" method="post" action="#">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Red Social</label>
+                        <select name="network" class="form-select" required>
+                            <option value="facebook">Facebook</option>
+                            <option value="github">GitHub</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">URL del Perfil</label>
+                        <div class="input-icon">
+                            <span class="input-icon-addon">
+                                <i class="ti ti-link text-azure"></i>
+                            </span>
+                            <input type="url" name="url" class="form-control" 
+                                   placeholder="https://..." required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary ms-auto">
+                        <i class="ti ti-plus me-2"></i>
+                        Agregar Red Social
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function deleteSocialLink(socialId) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta red social?')) {
+        fetch(`/usuario/social/${socialId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
+    }
+}
+</script>
