@@ -139,4 +139,3 @@ class Articles(models.Model):
         if self.thumbnail_image:
             self.thumbnail_image.delete(save=False)
         super().delete(*args, **kwargs)
-

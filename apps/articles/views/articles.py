@@ -22,6 +22,11 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
     form_class = ArticleDataCreateForm
     template_name = 'articles/create_form.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
     def form_valid(self, form):
         user = self.request.user
         # Asignar el usuario al artículo
@@ -33,7 +38,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         user.save()
         messages.success(self.request, 'Metadatos del artículo establecidos. Ahora puedes agregar el contenido.')
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
         messages.error(self.request, 'Hubo un error al crear el artículo.')
         return super().form_invalid(form)
@@ -41,7 +46,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
     # Función para redireccionar al detalle del artículo
     def get_success_url(self):
         return reverse('articles:article_content', kwargs={'title': self.object.slug})
-    
+
 
 class ArticleUpdateView(LoginRequiredMixin, PermissionRequiredMixin,
                         UpdateView):
@@ -70,18 +75,23 @@ class ArticleUpdateView(LoginRequiredMixin, PermissionRequiredMixin,
         if not (is_owner or is_staff or is_moderator):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
     def form_valid(self, form):
         messages.success(self.request, 'Artículo actualizado correctamente.')
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
         messages.error(self.request, 'Hubo un error al actualizar el artículo.')
         return super().form_invalid(form)
-    
+
     # Función para redireccionar al detalle del artículo
     def get_success_url(self):
-        return reverse('articles:article_content', kwargs={'title': self.object.slug})
+        return reverse('articles:article_update', kwargs={'title': self.object.slug})
 
 
 class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin,
@@ -99,7 +109,7 @@ class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin,
         article_name = self.kwargs.get(self.slug_url_kwarg)
         article = get_object_or_404(Articles, slug=article_name)
         return article
-    
+
     def dispatch(self, request, *args, **kwargs):
         """Check if the user is the owner of the article."""
         article = self.get_object()
@@ -111,19 +121,18 @@ class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin,
         if not (is_owner or is_staff or is_moderator):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         # Verifica y limpia la sesión
         if self.request.session.pop('came_from_update', False):
             kwargs['from_update'] = True
         return kwargs
-    
+
     def form_valid(self, form):
         messages.success(self.request, 'Contenido del artículo actualizado.')
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
         messages.error(self.request, 'Ocurrió un error!')
         return super().form_invalid(form)
-    

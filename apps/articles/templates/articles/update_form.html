@@ -1,33 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Editar Artículo {% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <div class="row align-items-center mw-100">
+            <div class="col-lg-8 m-auto">
+                <div class="mb-1">
+                    <ol class="breadcrumb" aria-label="breadcrumbs">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'core:home' %}">Inicio</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'users:profile' user.slug %}">Perfil usuario</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <a href="#">Artículo</a>
+                        </li>
+                    </ol>
+                </div>
+                <!-- <h2 class="page-title mb-3">Crear nuevo artículo</h2> -->
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="row">
+            <div class="col-lg-8 m-auto">
+                {% include 'partials/messages.html' %}
+                <h2 class="page-title mb-3 gradient-text-title">Editar artículo</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Encabezado</label>
+                                {{ form.title }}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Categoría</label>
+                                {{ form.category }}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Status</label>
+                                        {{ form.status }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Fecha de Publicación</label>
+                                        <input type="date"
+                                            name="{{ form.published_at.name }}"
+                                            class="form-control"
+                                            value="{{ form.published_at.value|date:'Y-m-d' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Descripción</label>
+                                {{ form.description }}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Imagen en miniatura</label>
+                                {% if form.instance.thumbnail_image %}
+                                    <div class="mb-2">
+                                        <div class="border border-dashed rounded p-3 text-center">
+                                            <p class="text-muted mb-2">Imagen actual</p>
+                                            <img src="{{ form.instance.thumbnail_image.url }}" alt="Imagen actual" class="img-thumbnail mb-2" style="max-height: 200px;">
+                                            <p class="text-muted mb-2">Selecciona una nueva imagen si deseas reemplazarla</p>
+                                            {{ form.thumbnail_image }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    {{ form.thumbnail_image }}
+                                {% endif %}
+                            </div>
+                            <div class="mb-3 text-end d-flex justify-content-end align-items-center">
+                                <a class="btn theme-btn2 border-0 text-white me-2"
+                                        href="{% url 'articles:set_update_flag' slug=article.slug %}">
+                                    Editar contenido
+                                </a>
+                                <button type="submit" class="btn theme-btn7 text-white">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 <h1>Artículo</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-        <label>Título</label>
-        {{ form.title}}
-    </div>
-    <div>
-        <label>Categoría</label>
-        {{ form.category }}
-    </div>
-    <div>
-        <label>Status</label>
-        {{ form.status }}
-    </div>
-    <div>
-        <label>Fecha de Publicación</label>
-        <input type="date" name="form.published_at.name" 
-            value="{{ form.published_at.value|date:'Y-m-d' }}">
-    </div>
-    <div>
-        <label>Descripción</label>
-        {{ form.description}}
-    </div>
-    <div>
-        <label>Imagen</label>
-        {{ form.thumbnail_image }}
-    </div>
-    <button type="submit">Guardar</button>
-    <a href="{% url 'articles:set_update_flag' slug=article.slug %}">
-        Editar contenido del artículo
-    </a>
-</form>
