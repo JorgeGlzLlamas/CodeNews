@@ -1,44 +1,141 @@
 <!-- Formulario de datos del usuario -->
-<div>
-    <h2>Información del perfil</h2>
-    <form method="post" action={% url 'users:profile_update' user.slug %}
-        enctype="multipart/form-data">
-        {% csrf_token %}
-            <div>
-                <label>Avatar</label>
-                {{ form.avatar_image }}
+<form method="post" action={% url 'users:profile_update' user.slug %}
+    enctype="multipart/form-data" id="profile-form">
+    {% csrf_token %}
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-user-edit me-2 text-primary"></i>Editar Perfil
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Información Personal -->
+            <div class="card card-sm mb-4">
+                <div class="card-status-start bg-primary"></div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="ti ti-id text-primary me-2"></i>Información Personal
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-user me-2"></i>Nombre de usuario
+                            </label>
+                            <div class="input-group input-group-flat">
+                                <span class="input-group-text">
+                                    <i class="ti ti-at text-azure"></i>
+                                </span>
+                                <input type="text" 
+                                       value="{{ form.username.value|default:'' }}"
+                                       name="{{ form.username.name }}"
+                                       class="form-control ps-1" 
+                                       placeholder="Ingresa tu nombre de usuario">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-mail me-2"></i>Email
+                            </label>
+                            <div class="input-group input-group-flat">
+                                <span class="input-group-text">
+                                    <i class="ti ti-mail text-azure"></i>
+                                </span>
+                                <input type="email" 
+                                       value="{{ form.email.value|default:'' }}"
+                                       name="{{ form.email.name }}"
+                                       class="form-control ps-1" 
+                                       placeholder="ejemplo@email.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-signature me-2"></i>Nombre
+                            </label>
+                            <div class="input-group input-group-flat">
+                                <span class="input-group-text">
+                                    <i class="ti ti-user-circle text-azure"></i>
+                                </span>
+                                <input type="text" 
+                                       value="{{ form.first_name.value|default:'' }}"
+                                       name="{{ form.first_name.name }}"
+                                       class="form-control ps-1" 
+                                       placeholder="Tu nombre">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-signature me-2"></i>Apellido
+                            </label>
+                            <div class="input-group input-group-flat">
+                                <span class="input-group-text">
+                                    <i class="ti ti-user-circle text-azure"></i>
+                                </span>
+                                <input type="text" 
+                                       value="{{ form.last_name.value|default:'' }}"
+                                       name="{{ form.last_name.name }}"
+                                       class="form-control ps-1" 
+                                       placeholder="Tu apellido">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label>Nombre de usuario:</label>
-                {{ form.username }}
+
+            <!-- Información de Contacto -->
+            <div class="card card-sm">
+                <div class="card-status-start bg-info"></div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="ti ti-address-book text-info me-2"></i>Información de Contacto
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-phone me-2"></i>Teléfono
+                            </label>
+                            <div class="input-group input-group-flat">
+                                <span class="input-group-text">
+                                    <i class="ti ti-phone text-info"></i>
+                                </span>
+                                <input type="tel" 
+                                       value="{{ form.phone.value|default:'' }}"
+                                       name="{{ form.phone.name }}"
+                                       class="form-control ps-1" 
+                                       placeholder="+34 000 000 000">
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-book me-2"></i>Biografía
+                            </label>
+                            <textarea name="{{ form.bio.name }}" 
+                                      class="form-control" 
+                                      rows="4" 
+                                      placeholder="Cuéntanos sobre ti...">{{ form.bio.value|default:'' }}</textarea>
+                            <div class="form-hint">
+                                Escribe una breve descripción sobre ti
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div>
-                <label>Email:</label>
-                {{ form.email }}
+        </div>
+
+        {% if can_edit %}
+        <div class="card-footer bg-transparent">
+            <div class="btn-list justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-device-floppy me-2"></i>Guardar Cambios
+                </button>
             </div>
-            
-            <div>
-                <label>Nombre:</label>
-                {{ form.first_name }}
-            </div>
-            
-            <div>
-                <label>Apellido:</label>
-                {{ form.last_name }}
-            </div>
-            
-            <div>
-                <label>Teléfono:</label>
-                {{ form.phone }}
-            </div>
-            
-            <div>
-                <label>Biografía:</label>
-                {{ form.bio }}
-            </div>
-            {% if can_edit%}
-                <button type="submit">Guardar Cambios</button>
-            {% endif %}
-    </form>
-</div>
+        </div>
+        {% endif %}
+    </div>
+</form>
