@@ -1,14 +1,4 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="container py-5">
-        <h2>Usuario: {{ user.username }}</h2>
-        {% if user.is_authenticated %}
-        <form method="post" action="{% url 'users:logout' %}" class="mt-3">
-            {% csrf_token %}
-            <button type="submit">Cerrar sesión</button>
-        </form>
-        <a href="{% url 'users:profile' user.slug %}">Ver perfil</a>
-        {% endif %}
-    </div>
 {% endblock %}
