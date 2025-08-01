@@ -29,5 +29,11 @@ urlpatterns = [
          name='profile_update'),
     path('<slug:username>/editar-privacidad/',
          user_profile.ProfilePrivacyView.as_view(),
-         name='profile_privacy')
+         name='profile_privacy'),
+    path('nueva-red-social/<slug:username>/',
+         user_profile.ProfileSocialMediaCreateView.as_view(),
+         name='social_media_create'),
+    path('eliminar-red-social/<int:pk>/',
+         user_profile.ProfileSocialMediaDeleteView.as_view(),
+         name='social_media_delete')
 ]
