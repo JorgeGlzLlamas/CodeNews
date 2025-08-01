@@ -35,6 +35,25 @@ class SocialMedia(models.Model):
         max_length=200,
     )
 
+    def get_tabler_classes(self):
+        """
+        Devuelve un diccionario con las clases de botón e icono de Tabler
+        correspondientes a la plataforma.
+        """
+        # Mapeo de plataformas a clases de Tabler
+        class_map = {
+            self.PlaformChoices.FACEBOOK:  {'button': 'btn-facebook',  'icon': 'ti-brand-facebook'},
+            self.PlaformChoices.GITHUB:    {'button': 'btn-github',    'icon': 'ti-brand-github'},
+            self.PlaformChoices.LINKEDIN:  {'button': 'btn-linkedin',  'icon': 'ti-brand-linkedin'},
+            self.PlaformChoices.TWITTER:   {'button': 'btn-twitter',   'icon': 'ti-brand-twitter'},
+            self.PlaformChoices.INSTAGRAM:{'button': 'btn-instagram', 'icon': 'ti-brand-instagram'},
+            self.PlaformChoices.YOUTUBE:   {'button': 'btn-youtube',   'icon': 'ti-brand-youtube'},
+            # Valor por defecto para "Otro" o cualquier plataforma no mapeada
+            self.PlaformChoices.OTHER:     {'button': 'btn-secondary', 'icon': 'ti-world'},
+        }
+        # Devuelve la entrada del mapa o un valor por defecto si no se encuentra
+        return class_map.get(self.platform, {'button': 'btn-secondary', 'icon': 'ti-link'})
+
     class Meta:
         """Meta options for the SocialMedia model."""
 
