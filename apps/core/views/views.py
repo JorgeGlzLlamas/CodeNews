@@ -2,4 +2,7 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'index.html')
+    context = {
+        'template_name': 'inicio'
+    }
+    return render(request, 'index.html', context)

@@ -41,39 +41,39 @@
 
           <!-- Login o Usuario -->
           {% if user.is_authenticated %}
-          <!-- Usuario autenticado -->
-          <div class="nav-item dropdown">
-            <a
-              href="#"
-              class="btn btn-action d-flex align-items-center text-reset p-0"
-              data-bs-toggle="dropdown"
-            >
-              <span
-                class="avatar m-0 ms-2 me-2"
-                style="width: 30px; height: 30px; background-image: url('{{ user.avatar_image.url }}')"
-              ></span>
-              <span class="d-none d-xl-inline pe-2 fs-4"
-                >{{ user.username }}</span
-              >
-            </a>
-            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <!-- Usuario autenticado -->
+            <div class="nav-item dropdown">
               <a
-                href="{% url 'users:profile' user.slug %}"
-                class="dropdown-item"
-                >Perfil</a
+                href="#"
+                class="btn btn-action d-flex align-items-center text-reset p-0"
+                data-bs-toggle="dropdown"
               >
-              <a href="{% url 'users:change_password' %}" class="dropdown-item"
-                >Cambiar contraseña</a
-              >
-              <div class="dropdown-divider"></div>
-              <form method="post" action="{% url 'users:logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="dropdown-item">
-                  Cerrar sesión
-                </button>
-              </form>
+                <span
+                  class="avatar m-0 ms-2 me-2"
+                  style="width: 30px; height: 30px; background-image: url('{{ request.user.avatar_image.url }}')"
+                ></span>
+                <span class="d-none d-xl-inline pe-2 fs-4"
+                  >{{ request.user.username }}</span
+                >
+              </a>
+              <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <a
+                  href="{% url 'users:profile' request.user.slug %}"
+                  class="dropdown-item"
+                  >Perfil</a
+                >
+                <a href="{% url 'users:change_password' %}" class="dropdown-item"
+                  >Cambiar contraseña</a
+                >
+                <div class="dropdown-divider"></div>
+                <form method="post" action="{% url 'users:logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">
+                    Cerrar sesión
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
           {% else %}
           <!-- No autenticado -->
           <a class="btn theme-btn7 text-white" href="{% url 'users:login' %}">
@@ -107,13 +107,22 @@
             class="nav nav-pills flex-column flex-lg-row justify-content-center text-center"
           >
             <li class="nav-item">
-              <a class="nav-link active" href="{% url 'core:home'%}">Inicio</a>
+              <a class="nav-link {% if template_name == 'inicio' %} active {% endif %}" 
+                href="{% url 'core:home'%}">
+                  Inicio
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Categorías</a>
+              <a class="nav-link {% if template_name == 'categorias' %} active {% endif %}" 
+                href="#">
+                  Categorías
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Autores</a>
+              <a class="nav-link {% if template_name == 'autores' %} active {% endif %}" 
+                href="#">
+                  Autores
+              </a>
             </li>
           </ul>
         </div>
