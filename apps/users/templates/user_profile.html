@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ user.get_full_name }} - Perfil{% endblock %}
+{% block title %}{{ user.get_full_name }}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -47,20 +47,18 @@
             </div>
 
             <!-- Estadísticas -->
-            <div class="row g-3 mt-3">
+            <div class="row mt-2 mb-3">
                 <div class="col-6">
-                    <div class="card border-0">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-body p-3 text-center">
-                            <div class="text-muted mb-1">Artículos</div>
-                            <div class="h3 m-0">{{ user.articles.count }}</div>
+                            Artículos <span class="badge bg-blue text-red-fg ms-2">{{ user.articles.count }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="card border-0">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-body p-3 text-center">
-                            <div class="text-muted mb-1">Favoritos</div>
-                            <div class="h3 m-0">{{ user.favorite_articles.count }}</div>
+                            Favoritos <span class="badge bg-blue text-red-fg ms-2">{{ user.favorite_articles.count }}</span>
                         </div>
                     </div>
                 </div>

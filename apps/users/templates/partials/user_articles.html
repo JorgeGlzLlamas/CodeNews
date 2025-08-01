@@ -4,9 +4,11 @@
             <h3 class="gradient-text-title">
                 <i class="ti ti-brand-blogger me-2"></i></i>Mis artículos
             </h3>
+            {% if user_owner %}
             <a href="{% url 'articles:article_create'%}" class="btn theme-btn7 text-white">
                 <i class="ti ti-circle-plus me-2"></i></i>Nuevo artículo
             </a>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -70,4 +72,11 @@
   {% endfor %}
 </div>
 {% else %}
+<div class="empty p-0">
+    <div class="empty-icon m-auto">
+        <i class="ti ti-file-off fs-1"></i>
+    </div>
+    <p class="empty-title">Sin artículos</p>
+    <p class="empty-subtitle text-muted">Aún no has publicado ningún artículo</p>
+</div>
 {% endif %}

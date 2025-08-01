@@ -1,0 +1,40 @@
+<!-- Modal para agregar red social -->
+<div class="modal modal-blur fade" id="addSocialModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title gradient-text-2">
+                    <i class="ti ti-share me-2"></i>Red Social
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="socialForm" method="post" action="{% url 'users:social_media_create' user.slug %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Red Social</label>
+                        {{ social_form.platform }} 
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">URL del Perfil</label>
+                        <div class="input-icon">
+                            <span class="input-icon-addon">
+                                <i class="ti ti-link text-azure"></i>
+                            </span>
+                            {{ social_form.link }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-pill" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn theme-btn2 btn-pill text-white ms-auto">
+                        <i class="ti ti-plus me-2"></i>
+                        Red Social
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

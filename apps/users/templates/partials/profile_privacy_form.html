@@ -4,7 +4,7 @@
             <h3 class=" gradient-text-title">
                 <i class="ti ti-share me-2"></i>Redes Sociales
             </h3>
-            {% if can_edit %}
+            {% if user_owner %}
                 <button type="submit" class="btn theme-btn7 text-white"
                         data-bs-toggle="modal" data-bs-target="#addSocialModal">
                     <i class="ti ti-circle-plus me-2"></i>Red Social
@@ -15,49 +15,45 @@
 </div>
 <div class="card mb-4">
     <div class="card-body">
-{% if user.social_links.all %}
-                            <div class="table-responsive">
-                                <table class="table table-vcenter">
-                                    <thead>
-                                        <tr>
-                                            <th>Red Social</th>
-                                            <th>Enlace</th>
-                                            <th class="w-1"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for social in user.social_links.all %}
-                                        <tr>
-                                            <td class="text-muted">
-                                                <i class="ti ti-brand-{{ social.network }} text-azure me-2"></i>
-                                                {{ social.get_network_display }}
-                                            </td>
-                                            <td class="text-muted">
-                                                <a href="{{ social.url }}" target="_blank" class="text-reset">
-                                                    {{ social.url }}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="btn btn-icon btn-outline-danger btn-sm" 
-                                                   onclick="deleteSocialLink('{{ social.id }}')">
-                                                    <i class="ti ti-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+        {% if user.social_media.all %}
+            {% for social in user.social_media.all %}
+                {% with classes=social.get_tabler_classes %}
+                <div class="card mb-2">
+                    <div class="card-body p-1 d-flex align-items-center justify-content-between">
+                        <div class="{% if user_owner %} col-6 col-md-4 col-lg-3 {% else %} col {% endif %}">
+                            <a href="{{ social.link }}" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="btn {{ classes.button }} btn-icon-text w-100">
+                                <i class="ti {{ classes.icon }} me-2"></i>
+                                {{ social.get_platform_display }}
+                            </a>
+                        </div>
+                        {% if user_owner %}
+                            <div class="col-auto">
+                                <!-- Boton de Acción (Eliminar) -->
+                                <form method="post" action="{% url 'users:social_media_delete' pk=social.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-icon">
+                                        <i class="ti ti-trash fs-3"></i>
+                                    </button>
+                                </form>
                             </div>
-    {% else %}
-        <!-- El usuario no tiene artículos publicados -->
-        <div class="empty p-0">
-            <div class="empty-icon m-auto">
-                <i class="ti ti-share-off fs-1"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+            <!-- El usuario no tiene artículos publicados -->
+            <div class="empty p-0">
+                <div class="empty-icon m-auto">
+                    <i class="ti ti-share-off fs-1"></i>
+                </div>
+                <p class="empty-title">Sin redes sociales</p>
+                <p class="empty-subtitle text-muted">Aún no tienes agregadas redes sociales</p>
             </div>
-            <p class="empty-title">Sin redes sociales</p>
-            <p class="empty-subtitle text-muted">Aún no tienes agregadas redes sociales</p>
-        </div>
-    {% endif %}
+        {% endif %}
     </div>
 </div>
                 
@@ -143,69 +139,5 @@
     </div>
 </form>
 
-<!-- Modal para agregar red social -->
-<div class="modal modal-blur fade" id="addSocialModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="ti ti-share text-azure me-2"></i>Agregar Red Social
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="socialForm" method="post" action="#">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Red Social</label>
-                        <select name="network" class="form-select" required>
-                            <option value="facebook">Facebook</option>
-                            <option value="github">GitHub</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="twitter">Twitter</option>
-                            <option value="instagram">Instagram</option>
-                            <option value="youtube">YouTube</option>
-                            <option value="other">Otro</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">URL del Perfil</label>
-                        <div class="input-icon">
-                            <span class="input-icon-addon">
-                                <i class="ti ti-link text-azure"></i>
-                            </span>
-                            <input type="url" name="url" class="form-control" 
-                                   placeholder="https://..." required>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary ms-auto">
-                        <i class="ti ti-plus me-2"></i>
-                        Agregar Red Social
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-function deleteSocialLink(socialId) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta red social?')) {
-        fetch(`/usuario/social/${socialId}/delete/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            },
-        }).then(response => {
-            if (response.ok) {
-                location.reload();
-            }
-        });
-    }
-}
-</script>
+<!-- Modal for social media -->
+{% include 'partials/profile_social_media_form.html' %}
