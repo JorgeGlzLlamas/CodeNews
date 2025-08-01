@@ -1,88 +1,21 @@
-<!-- Formulario de configuración de privacidad de usuario -->
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">
-            <i class="ti ti-shield-lock text-primary me-2"></i>Configuración de Privacidad
-        </h3>
+<div class="row">
+    <div class="col-12 m-auto">
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <h3 class=" gradient-text-title">
+                <i class="ti ti-share me-2"></i>Redes Sociales
+            </h3>
+            {% if can_edit %}
+                <button type="submit" class="btn theme-btn7 text-white"
+                        data-bs-toggle="modal" data-bs-target="#addSocialModal">
+                    <i class="ti ti-circle-plus me-2"></i>Red Social
+                </button>
+            {% endif %}
+        </div>
     </div>
+</div>
+<div class="card mb-4">
     <div class="card-body">
-        <form method="post" action={% url 'users:profile_privacy' user.slug %}>
-            {% csrf_token %}
-            
-            <div class="row g-3">
-                <!-- Configuraciones de privacidad -->
-                <div class="col-12">
-                    <div class="card card-sm">
-                        <div class="card-status-start bg-primary"></div>
-                        <div class="card-body">
-                            <h4 class="card-title mb-4">
-                                <i class="ti ti-eye text-azure me-2"></i>Visibilidad del Perfil
-                            </h4>
-                            <div class="row g-3">
-                                <!-- Nombre público -->
-                                <div class="col-md-6">
-                                    <div class="form-label-icon">
-                                        <label class="form-label">
-                                            <i class="ti ti-id text-azure me-2"></i>Nombre público
-                                        </label>
-                                        <span class="form-help" data-bs-toggle="popover" 
-                                              data-bs-placement="top"
-                                              data-bs-content="Elige cómo quieres que se muestre tu nombre">?</span>
-                                    </div>
-                                    <select class="form-select" name="{{ form.username_or_name.name }}">
-                                        <option value="username">Mostrar nombre de usuario</option>
-                                        <option value="full_name">Mostrar nombre completo</option>
-                                    </select>
-                                </div>
-
-                                <!-- Email -->
-                                <div class="col-md-6">
-                                    <label class="form-check form-switch py-2">
-                                        {{ form.email_is_public }}
-                                        <span class="form-check-label">
-                                            <i class="ti ti-mail text-azure me-2"></i>Mostrar email público
-                                        </span>
-                                    </label>
-                                </div>
-                                
-                                <!-- Teléfono -->
-                                <div class="col-md-6">
-                                    <label class="form-check form-switch py-2">
-                                        {{ form.phone_is_public }}
-                                        <span class="form-check-label">
-                                            <i class="ti ti-phone text-azure me-2"></i>Mostrar teléfono público
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <!-- Biografía -->
-                                <div class="col-md-6">
-                                    <label class="form-check form-switch py-2">
-                                        {{ form.bio_is_public }}
-                                        <span class="form-check-label">
-                                            <i class="ti ti-book text-azure me-2"></i>Mostrar biografía pública
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Redes Sociales -->
-                <div class="col-12">
-                    <div class="card card-sm">
-                        <div class="card-status-start bg-azure"></div>
-                        <div class="card-body">
-                            <h4 class="card-title d-flex align-items-center justify-content-between mb-4">
-                                <span>
-                                    <i class="ti ti-share text-azure me-2"></i>Redes Sociales
-                                </span>
-                                <button type="button" class="btn btn-azure" data-bs-toggle="modal" data-bs-target="#addSocialModal">
-                                    <i class="ti ti-plus me-2"></i>Agregar Red Social
-                                </button>
-                            </h4>
-                            
+{% if user.social_links.all %}
                             <div class="table-responsive">
                                 <table class="table table-vcenter">
                                     <thead>
@@ -115,24 +48,100 @@
                                     </tbody>
                                 </table>
                             </div>
+    {% else %}
+        <!-- El usuario no tiene artículos publicados -->
+        <div class="empty p-0">
+            <div class="empty-icon m-auto">
+                <i class="ti ti-share-off fs-1"></i>
+            </div>
+            <p class="empty-title">Sin redes sociales</p>
+            <p class="empty-subtitle text-muted">Aún no tienes agregadas redes sociales</p>
+        </div>
+    {% endif %}
+    </div>
+</div>
+                
+
+<!-- Formulario de configuración de privacidad de usuario -->
+<form method="post" action={% url 'users:profile_privacy' user.slug %}>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12 m-auto">
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+                <h3 class=" gradient-text-title">
+                    <i class="ti ti-eye me-2"></i>Visibilidad del Perfil
+                </h3>
+                {% if can_edit %}
+                    <button type="submit" class="btn theme-btn7 text-white">
+                        <i class="ti ti-device-floppy me-2"></i>Guardar Cambios
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <!-- Nombre público -->
+                <div class="mb-3 d-flex justify-content-between align-items-start w-100">
+                    <div class="me-3">
+                        <div class="form-label mb-1">Nombre público</div>
+                        <div class="text-muted small">
+                            Elige cómo quieres que se muestre tu nombre
                         </div>
+                    </div>
+                    <div style="min-width: 150px;">
+                        {{ privacy_form.username_or_name }}
                     </div>
                 </div>
             </div>
-
-            {% if can_edit %}
-            <div class="card-footer bg-transparent px-0 pb-0">
-                <div class="btn-list justify-content-end">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="ti ti-device-floppy me-2"></i>
-                        Guardar Cambios
-                    </button>
+            <div class="row">
+                <!-- Biografía -->
+                <div class="mb-3 d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="form-label mb-1">Biografía</div>
+                        <div class="text-muted small">
+                            Controla si tu biografía será visible para otros usuarios.
+                        </div>
+                    </div>
+                    <!-- Switch con estilo Tabler -->
+                    <label class="form-check form-switch ms-auto mb-auto mt-auto me-0 p-0">
+                        {{ privacy_form.bio_is_public }}
+                        <span class="form-check-label invisible">xxxxx</span>
+                    </label>
+                </div>
+                <!-- Email -->
+                <div class="mb-3 d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="form-label mb-1">Correo electrónico</div>
+                        <div class="text-muted small">
+                            Controla si tu correo será visible para otros usuarios.
+                        </div>
+                    </div>
+                    <!-- Switch con estilo Tabler -->
+                    <label class="form-check form-switch ms-auto mb-auto mt-auto me-0 p-0">
+                        {{ privacy_form.email_is_public }}
+                        <span class="form-check-label invisible">xxxxx</span>
+                    </label>
+                </div>
+                <!-- Teléfono -->
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="form-label mb-1">Teléfono</div>
+                        <div class="text-muted small">
+                            Controla si tu número de teléfono será visible para otros usuarios.
+                        </div>
+                    </div>
+                    <!-- Switch con estilo Tabler -->
+                    <label class="form-check form-switch ms-auto mb-auto mt-auto me-0 p-0">
+                        {{ privacy_form.phone_is_public }}
+                        <span class="form-check-label invisible">xxxxx</span>
+                    </label>
                 </div>
             </div>
-            {% endif %}
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <!-- Modal para agregar red social -->
 <div class="modal modal-blur fade" id="addSocialModal" tabindex="-1" role="dialog" aria-hidden="true">

@@ -13,29 +13,18 @@
                     <div class="mb-4 position-relative">
                         <!-- Avatar del usuario -->
                         <div class="position-relative mb-4">
-                            <div class="avatar avatar-2xl mb-3 mx-auto">
-                                <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
-                                    {% if user.avatar_image %}
-                                        <img src="/media/{{ user.avatar_image }}" 
-                                             class="rounded-circle img-fluid shadow-sm"
-                                             style="width: 100%; height: 100%; object-fit: cover;">
-                                    {% else %}
-                                        <img src="{% static 'usuarios/avatars/default.png' %}" 
-                                             class="rounded-circle img-fluid shadow-sm"
-                                             style="width: 100%; height: 100%; object-fit: cover;">
-                                    {% endif %}
-                                    
+                            <div class="avatar avatar-2xl rounded-circle mb-3 mx-auto">
+                                <div class=" position-relative d-inline-block" style="width: 120px; height: 120px;">
+                                    <img src="{{ user.avatar_image.url }}"
+                                         class="rounded-circle img-fluid shadow-sm w-100 h-100"
+                                         style="object-fit: cover;">
                                     {% if can_edit %}
                                     <label for="avatar-input" 
                                            class="position-absolute bottom-0 end-0 btn btn-white btn-icon rounded-circle shadow-sm" 
                                            style="transform: translate(25%, 25%);">
                                         <i class="ti ti-pencil text-primary"></i>
-                                        <input type="file" 
-                                               id="avatar-input" 
-                                               name="avatar_image" 
-                                               class="d-none" 
-                                               form="profile-form" 
-                                               accept="image/*"
+                                        <input type="file" id="avatar-input" name="avatar_image" 
+                                               class="d-none" form="profile-form" accept="image/*"
                                                onchange="document.getElementById('profile-form').submit();">
                                     </label>
                                     {% endif %}
@@ -78,29 +67,16 @@
             </div>
         </div>
 
-        <!-- Contenido principal -->
-        <div class="col-lg-9">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <!-- Pestañas de navegación -->
-                    <div class="d-flex">
-                        <ul class="nav nav-tabs nav-fill" data-bs-toggle="tabs">
+            <!-- Contenido principal -->
+            <div class="col-lg-9">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <!-- Pestañas de navegación -->
+                        <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
                             <li class="nav-item">
                                 <a href="#profile" class="nav-link active" data-bs-toggle="tab">
                                     <i class="ti ti-user me-2"></i>
                                     Información
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#articles" class="nav-link" data-bs-toggle="tab">
-                                    <i class="ti ti-article me-2"></i>
-                                    Publicaciones
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#favorites" class="nav-link" data-bs-toggle="tab">
-                                    <i class="ti ti-bookmark me-2"></i>
-                                    Favoritos
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -109,119 +85,49 @@
                                     Privacidad
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="#articles" class="nav-link" data-bs-toggle="tab">
+                                    <i class="ti ti-article me-2"></i>
+                                    Artículos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#favorites" class="nav-link" data-bs-toggle="tab">
+                                    <i class="ti ti-bookmark me-2"></i>
+                                    Favoritos
+                                </a>
+                            </li>
                         </ul>
                     </div>
+                    
+                    <div class="card-body p-4">
+                        {% include 'partials/messages.html' %}
+                        <div class="tab-content mt-4">
+                            <div class="tab-pane active show" id="profile">
+                                <!-- Formulario de datos del usuario -->
+                                {% include 'partials/profile_form.html' with form=profile_form %}
+                            </div>
+                            
+                            <div class="tab-pane" id="privacy">
+                                <!-- Formulario de privacidad del usuario -->
+                                {% include 'partials/profile_privacy_form.html' %}
+                            </div>
 
-                    <div class="tab-content mt-4">
-                        <div class="tab-pane active show" id="profile">
-                            {% include 'partials/profile_form.html' with form=profile_form %}
-                        </div>
+                            <div class="tab-pane" id="articles">
+                                <!-- Mis artículos -->
+                                {% include 'partials/user_articles.html' with user=user %}
+                            </div>
 
-                        <div class="tab-pane" id="articles">
-                            {% if user.articles.all %}
-                                <div class="row g-3">
-                                    {% for article in user.articles.all %}
-                                        <div class="col-md-6">
-                                            <div class="card card-sm">
-                                                {% if article.image %}
-                                                    <a href="{% url 'articles:article_detail' article.slug %}" class="d-block">
-                                                        <img src="{{ article.image.url }}" 
-                                                             class="card-img-top" 
-                                                             style="height: 160px; object-fit: cover;"
-                                                             alt="{{ article.title }}">
-                                                    </a>
-                                                {% endif %}
-                                                <div class="card-body">
-                                                    <h3 class="card-title">{{ article.title }}</h3>
-                                                    <div class="d-flex align-items-center mt-3">
-                                                        <span class="text-muted">
-                                                            <i class="ti ti-calendar me-1"></i>
-                                                            {{ article.created_at|date:"d M, Y" }}
-                                                        </span>
-                                                        <a href="{% url 'articles:article_detail' article.slug %}" 
-                                                           class="btn btn-primary ms-auto">
-                                                            Leer más
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                <div class="empty">
-                                    <div class="empty-icon">
-                                        <i class="ti ti-article-off"></i>
-                                    </div>
-                                    <p class="empty-title">Sin publicaciones</p>
-                                    <p class="empty-subtitle text-muted">
-                                        Aún no has publicado ningún artículo
-                                    </p>
-                                    <div class="empty-action">
-                                        <a href="{% url 'articles:article_create' %}" class="btn btn-primary">
-                                            <i class="ti ti-plus me-2"></i>
-                                            Crear artículo
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>
+                            <div class="tab-pane" id="favorites">
+                                <!-- Mis favoritos -->
+                                {% include 'partials/user_favorites.html' with user=user %}
+                            </div>
 
-                        <div class="tab-pane" id="favorites">
-                            {% if user.favorite_articles.all %}
-                                <div class="row g-3">
-                                    {% for article in user.favorite_articles.all %}
-                                        <div class="col-md-6">
-                                            <div class="card card-sm">
-                                                {% if article.image %}
-                                                    <a href="{% url 'articles:article_detail' article.slug %}" class="d-block">
-                                                        <img src="{{ article.image.url }}" 
-                                                             class="card-img-top" 
-                                                             style="height: 160px; object-fit: cover;"
-                                                             alt="{{ article.title }}">
-                                                    </a>
-                                                {% endif %}
-                                                <div class="card-body">
-                                                    <h3 class="card-title">{{ article.title }}</h3>
-                                                    <div class="d-flex align-items-center mt-3">
-                                                        <div class="avatar avatar-xs me-2">
-                                                            {% if article.author.avatar_image %}
-                                                                <img src="/media/{{ article.author.avatar_image }}">
-                                                            {% else %}
-                                                                <img src="{% static 'usuarios/avatars/default.png' %}">
-                                                            {% endif %}
-                                                        </div>
-                                                        <span class="text-muted">{{ article.author.get_full_name }}</span>
-                                                        <a href="{% url 'articles:article_detail' article.slug %}" 
-                                                           class="btn btn-primary ms-auto">
-                                                            Leer más
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                <div class="empty">
-                                    <div class="empty-icon">
-                                        <i class="ti ti-bookmark-off"></i>
-                                    </div>
-                                    <p class="empty-title">Sin favoritos</p>
-                                    <p class="empty-subtitle text-muted">
-                                        No tienes artículos marcados como favoritos
-                                    </p>
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="tab-pane" id="privacy">
-                            {% include 'partials/profile_privacy_form.html' with form=privacy_form %}
+                            
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 {% endblock %}

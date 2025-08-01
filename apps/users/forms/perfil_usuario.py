@@ -15,9 +15,26 @@ class UserProfileForm(forms.ModelForm):
         ]
         widgets = {
             'username': forms.TextInput(attrs={
-                'readonly': True
+                'readonly': True,
+                'class': 'form-control',
+                'placeholder': 'Nombre de usuario'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'correo@ejemplo.com'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '+ 52 000 000 0000'
             }),
             'bio': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 4
             })
         }
@@ -35,3 +52,17 @@ class UserProfilePrivacyForm(forms.ModelForm):
             'username_or_name', 'bio_is_public', 
             'email_is_public','phone_is_public',   
         ]
+        widgets = {
+            'username_or_name': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'bio_is_public': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'email_is_public': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'phone_is_public': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
