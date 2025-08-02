@@ -4,10 +4,13 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.urls import reverse
+from django.views.generic import DetailView
 
 import markdown
 import logging
 from django.http import HttpResponse, JsonResponse
+from django.utils.safestring import mark_safe
+import re
 
 
 from articles.models.articles import Articles
@@ -134,7 +137,7 @@ class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         return kwargs
     
     def get_success_url(self):
-        return reverse('articles:article_content', kwargs={'title': self.object.slug})
+        return reverse('articles:article_detail', kwargs={'slug': self.object.slug})
 
     def post(self, request, *args, **kwargs):
         """Maneja solicitudes POST para vista previa o guardado."""
@@ -199,3 +202,20 @@ class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         """Maneja el caso de formulario inválido."""
         messages.error(self.request, 'Ocurrió un error!')
         return super().form_invalid(form)
+    
+
+class ArticleDetailView(DetailView):
+    model = Articles
+    template_name = 'articles/article_detail.html'
+    context_object_name = 'article'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        md = markdown.Markdown(extensions=['extra', 'codehilite', 'toc'])
+        html = md.convert(self.object.content)
+
+        # Divide en secciones por <h2> o <h3>
+        secciones = re.split(r'(?=<h2>|<h3>)', html)
+        context['sections'] = secciones  # Lista con cada bloque
+        return context

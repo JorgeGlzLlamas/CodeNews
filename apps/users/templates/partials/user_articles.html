@@ -57,7 +57,7 @@
             {{ article.description|truncatechars:120 }}
         </div>
         <div class="d-flex align-items-center mb-0 mt-auto">
-            <a href="#" 
+            <a href="{% url 'articles:article_detail' article.slug %}"
                 class="btn theme-btn2 btn-pill btn-sm ms-auto text-white"> 
                 Leer más
             </a>

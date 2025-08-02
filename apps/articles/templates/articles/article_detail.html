@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="blog-details1-all sp">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row align-items-center">
+            <div class="col-lg-8 m-auto">
+              <div class="blog-page3-single-box text-center">
+                <div class="heading1">
+                  <div class="social-area">
+                    <div class="author-area">
+                      <div class="author">
+                        <div class="author-tumb">
+                          <img src="{{ article.user.avatar_image.url }}" alt="{{ article.user.username }}" />
+                        </div>
+                        <span class="author-text"> {{ article.user.first_name }} {{ article.user.last_name }}</span>
+                      </div>
+                      <div class="date">
+                        <span>Publicado el: {{ article.published_at|date:'d/m/Y' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <h2>{{ article.title }}</h2>
+                  <p class="mt-16">{{ article.description}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8 m-auto">
+              <div class="_relative mt-20">
+                {% if article.thumbnail_image %}
+                    <img
+                    src="{{ article.thumbnail_image.url }}"
+                    class="card-img-top"
+                    style="height: 500px; object-fit: cover"
+                    alt="{{ article.title }}"
+                    />
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8 m-auto">
+          <div class="details content-area">
+            {% for section in sections %}
+            <article class="mt-30">
+                <div class="heading1">
+                {{ section|safe }}
+                </div>
+            </article>
+            {% endfor %}
+
+            <div class="comments-area">
+              <div class="heading1 mt-40">
+                <h3>Comentarios (0)</h3>
+                <p class="mt-10">Sé el primero en comentar este artículo.</p>
+              </div>
+            </div>
+
+            <!-- Formulario de contacto, puedes adaptarlo o quitarlo -->
+            <div class="details-contact-area">
+              <div class="heading1">
+                <h5>Deja un comentario</h5>
+                <p class="mt-10">¿Tienes dudas o ideas que compartir? ¡Escríbelas abajo!</p>
+              </div>
+
+              <form action="#">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="single-input">
+                      <input type="text" placeholder="Nombre" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="single-input">
+                      <input type="email" placeholder="Email" />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="single-input">
+                      <textarea rows="5" placeholder="Comentario"></textarea>
+                    </div>
+                    <div class="button mt-30">
+                      <button class="theme-btn1" type="button" onclick="mostrarMensaje()">Enviar</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

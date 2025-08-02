@@ -11,6 +11,8 @@ urlpatterns = [
     path('<slug:title>/contenido/',
          articles.ArticleContentView.as_view(),
          name='article_content'),
+    path('<slug:slug>/', articles.ArticleDetailView.as_view(), 
+         name='article_detail'),
     path('<slug:title>/editar/',
          articles.ArticleUpdateView.as_view(),
          name='article_update'),
