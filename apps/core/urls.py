@@ -12,4 +12,5 @@ urlpatterns = [
     
     # Ruta de Autores
     path('autores/', views.autores, name='autores'),
+    path('autor/<int:user_id>/', views.autor, name='autor'),
 ]

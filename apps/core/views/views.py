@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Max, Q, Prefetch
 from django.core.paginator import Paginator
+from django.utils.text import slugify
+from django.http import Http404
 from articles.models import Articles, ArticlesCategory, ArticlesTags
 from users.models import User, SocialMedia
 
@@ -171,3 +173,13 @@ def autores(request):
     }
     
     return render(request, 'autores.html', context)
+
+def autor(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    published_articles = user.articles.filter(status='published')
+    
+    context = {
+        'user': user,
+        'published_articles': published_articles
+    }
+    return render(request, 'autor.html', context)
