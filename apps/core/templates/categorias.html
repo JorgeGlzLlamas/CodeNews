@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CodeNews - Categorías{% endblock %}
+
+{% block content %}
+
+<div class="inner-hero bg-cover position-relative" style="background-color:rgb(202, 187, 228);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="main-heading">
+                    <h1 class="display-4 bg-purple text-white py-3 px-5 d-inline-block rounded-pill shadow-lg" >Categorías</h1>
+                    <p class="mt-3 text-white lead">Explora los temas más relevantes y recientes de nuestra comunidad.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="blog-1 blog1-cetegorys sp blog-formets-sec py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center heading1">
+                <h2 class="display-5 fw-bold mb-3">Explora Nuestras Categorías</h2>
+                <p class="lead text-muted dark-theme-text mb-0">Descubre contenido organizado por temas de tu interés</p>
+                <hr class="mx-auto my-4 dark-theme-text" style="width: 50px; height: 3px; opacity: 1; background-color: #6f42c1;" />
+            </div>
+        </div>
+        
+        <form method="GET" action="{% url 'core:categorias' %}" id="filters-form">
+            <div class="row align-items-end mb-5 filter-area">
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <label for="search-input" class="form-label text-muted">Buscar</label>
+                    <div class="position-relative">
+                        <input id="search-input" name="q" class="form-control form-control-lg ps-6" type="search" placeholder="Buscar por nombre..." value="{{ current_search }}">
+                        <i class="ti ti-search position-absolute" style="top: 50%; left: 1.25rem; transform: translateY(-50%); font-size: 1.2rem; color: #6c757d;"></i>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 mb-3 mb-lg-0">
+                    <label for="filter-select" class="form-label text-muted">Ordenar por</label>
+                    <select id="filter-select" name="sort" class="form-select form-select-lg nice-select">
+                        <option value="populares" {% if current_sort == 'populares' %}selected{% endif %}>Más Populares</option>
+                        <option value="recientes" {% if current_sort == 'recientes' %}selected{% endif %}>Más Recientes</option>
+                        <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>A - Z</option>
+                        <option value="z-a" {% if current_sort == 'z-a' %}selected{% endif %}>Z - A</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-3 mb-lg-0">
+                    <label for="show-select" class="form-label text-muted">Mostrar</label>
+                    <select id="show-select" name="show" class="form-select form-select-lg nice-select">
+                        <option value="8" {% if current_show == '8' %}selected{% endif %}>8</option>
+                        <option value="12" {% if current_show == '12' %}selected{% endif %}>12</option>
+                        <option value="24" {% if current_show == '24' %}selected{% endif %}>24</option>
+                        <option value="all" {% if current_show == 'all' %}selected{% endif %}>Todas</option>
+                    </select>
+                </div>
+                <div class="col-lg-1 col-md-4 d-grid">
+                     <a href="{% url 'core:categorias' %}" class="btn btn-outline-secondary btn-lg" title="Restablecer filtros">
+                         <i class="ti ti-refresh"></i>
+                     </a>
+                </div>
+            </div>
+        </form>
+        
+        <div id="categories-container">
+            <div class="row g-4" id="categories-row">
+                {% for category in categories %}
+                <div class="col-lg-3 col-md-6 category-card" 
+                     data-aos="fade-up" data-aos-offset="50" data-aos-duration="400" 
+                     data-aos-delay="{{ forloop.counter0|add:'50' }}">
+                        <div class="blog1-single-box h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+                            <div class="position-relative image-anime">
+                                <img src="{{ category.image.url|default:'/static/vexon/img/logo/cdnews.png' }}" alt="{{ category.name }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                            </div>
+                            <div class="heading1 text-center p-4">
+                                <h5 class="card-title fw-bold mb-3">{{ category.name }}</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="mb-0 small"><i class="ti ti-article me-2"></i>{{ category.articles_count }} artículo{{ category.articles_count|pluralize }}</p>
+                                    {% if category.most_popular_tag %}
+                                    <span class="badge rounded-pill px-3 py-2" style="background-color: {{ category.most_popular_tag.color }}; color: white;">
+                                        <i class="ti ti-tag me-1"></i>{{ category.most_popular_tag.name }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 text-center pb-4">
+                                <a href="{% url 'core:articles_by_category' category.slug %}" class="btn btn-outline-primary rounded-pill px-4">Explorar</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-warning">
+                        <i class="ti ti-zoom-cancel me-2 fs-2"></i> No se encontraron categorías que coincidan con tu búsqueda.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% if is_paginated %}
+        <div class="space60"></div>
+        <div class="row">
+            <div class="col-12 m-auto">
+                <nav aria-label="Navegación de páginas">
+                    <div class="theme-pagination">
+                         <ul class="d-flex justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li><a href="?page={{ page_obj.previous_page_number }}&q={{ current_search }}&sort={{ current_sort }}&show={{ current_show }}" aria-label="Anterior"><i class="ti ti-chevron-left"></i></a></li>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li><a class="active" href="#">{{ num }}</a></li>
+                                {% else %}
+                                    <li><a href="?page={{ num }}&q={{ current_search }}&sort={{ current_sort }}&show={{ current_show }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li><a href="?page={{ page_obj.next_page_number }}&q={{ current_search }}&sort={{ current_sort }}&show={{ current_show }}" aria-label="Siguiente"><i class="ti ti-chevron-right"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Para una mejor experiencia, el formulario se envía automáticamente
+    // cuando el usuario cambia una opción de los selectores.
+    const form = document.getElementById('filters-form');
+    
+    document.getElementById('filter-select').addEventListener('change', function() {
+        form.submit();
+    });
+    
+    document.getElementById('show-select').addEventListener('change', function() {
+        form.submit();
+    });
+});
+</script>
+
+{% endblock %}

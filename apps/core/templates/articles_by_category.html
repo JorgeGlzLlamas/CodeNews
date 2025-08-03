@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CodeNews - Artículos de {{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="inner-hero bg-cover position-relative" style="background-image: url('{{ category.image.url|default:"/static/assets/img/bg/inner-hero-bg.jpg" }}'); background-position: center;">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="main-heading">
+                    <h1 class="display-4 py-3 px-5 d-inline-block rounded-pill shadow-lg" style="background-color: #6f42c1; color: white;">
+                        {{ category.name }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+</div>
+
+
+<div class="blog-1 sp blog-formets-sec py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center heading1">
+                <h2 class="display-5 fw-bold mb-3">{{ page_obj.paginator.count }} Artículo{{ page_obj.paginator.count|pluralize }}</h2>
+                <p class="lead text-muted mb-0">Descubre todo el contenido sobre {{ category.name }}</p>
+                <hr class="mx-auto my-4" style="width: 50px; height: 3px; opacity: 1; background-color: #6f42c1;" />
+            </div>
+        </div>
+
+        <form method="GET" action="{% url 'core:articles_by_category' category.slug %}" id="filters-form">
+            <div class="row align-items-end mb-5 filter-area">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <label for="search-input" class="form-label text-muted">Buscar Artículo</label>
+                    <div class="position-relative">
+                        <input id="search-input" name="q" class="form-control form-control-lg ps-6" type="search" placeholder="Buscar por título..." value="{{ current_search }}">
+                        <i class="ti ti-search position-absolute" style="top: 50%; left: 1.25rem; transform: translateY(-50%); font-size: 1.2rem; color: #6c757d;"></i>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-8 mb-3 mb-lg-0">
+                    <label for="sort-select" class="form-label text-muted">Ordenar por</label>
+                    <select id="sort-select" name="sort" class="form-select form-select-lg nice-select">
+                        <option value="recientes" {% if current_sort == 'recientes' %}selected{% endif %}>Más Recientes</option>
+                        <option value="populares" {% if current_sort == 'populares' %}selected{% endif %}>Más Populares</option>
+                        <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>A - Z</option>
+                    </select>
+                </div>
+                <div class="col-lg-1 col-md-4 d-grid">
+                     <a href="{% url 'core:articles_by_category' category.slug %}" class="btn btn-outline-secondary btn-lg" title="Restablecer filtros">
+                         <i class="ti ti-refresh"></i>
+                     </a>
+                </div>
+            </div>
+        </form>
+
+        <div class="row g-4" id="articles-container">
+            {% for article in articles %}
+            <div class="col-lg-4 col-md-6 article-card" data-aos="fade-up" data-aos-offset="50" data-aos-duration="400">
+                <a href="{{ article.get_absolute_url }}" class="text-decoration-none d-block h-100">
+                    <div class="blog1-single-box h-100 d-flex flex-column border-0 shadow-sm rounded-3 overflow-hidden">
+                        <div class="position-relative image-anime">
+                            <img src="{{ article.thumbnail_image.url|default:'/static/assets/img/blog/blog-1.png' }}" alt="{{ article.title }}" class="card-img-top" style="height: 220px; object-fit: cover;">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                        </div>
+                        <div class="p-4 flex-grow-1 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                               <span class="badge" style="background-color: {{ article.category.color|default:'#e2d9fc' }}; color: {{ article.category.text_color|default:'#6f42c1' }}; font-size: 0.8rem;">
+                                    {{ article.category.name }}
+                                </span>
+                                <span class="text-muted small"><i class="ti ti-eye me-1"></i>{{ article.views_count }}</span>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">{{ article.title|truncatechars:60 }}</h5>
+                            <p class="card-text text-muted small flex-grow-1">{{ article.description|truncatechars:100 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    {% if article.user.avatar_image and article.user.avatar_image.name != 'usuarios/avatars/default.png' %}
+                                        <img src="{{ article.user.avatar_image.url }}" alt="{{ article.user.get_full_name }}" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                            <i class="ti ti-user text-muted fs-4"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <div class="fw-semibold small">{{ article.user.get_full_name }}</div>
+                                        <div class="text-muted" style="font-size: 0.75rem;">@{{ article.user.username }}</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-muted small"><i class="ti ti-calendar-event me-1"></i>{{ article.published_at|date:"d M, Y" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-warning">
+                    <h3 class="alert-title"><i class="ti ti-zoom-cancel me-2"></i>Sin Resultados</h3>
+                    <p class="text-muted">No se encontraron artículos que coincidan con tu búsqueda en esta categoría.</p>
+                    <a href="{% url 'core:articles_by_category' category.slug %}" class="btn btn-primary mt-2">Restablecer Filtros</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated and articles %}
+        <div class="space60"></div>
+        <div class="row">
+            <div class="col-12 m-auto">
+                <nav aria-label="Navegación de páginas">
+                    <div class="theme-pagination">
+                         <ul class="d-flex justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li><a href="?page={{ page_obj.previous_page_number }}&q={{ current_search }}&sort={{ current_sort }}" aria-label="Anterior"><i class="ti ti-chevron-left"></i></a></li>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li><a class="active" href="#">{{ num }}</a></li>
+                                {% else %}
+                                    <li><a href="?page={{ num }}&q={{ current_search }}&sort={{ current_sort }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li><a href="?page={{ page_obj.next_page_number }}&q={{ current_search }}&sort={{ current_sort }}" aria-label="Siguiente"><i class="ti ti-chevron-right"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('filters-form');
+    const searchInput = document.getElementById('search-input');
+    const sortSelect = document.getElementById('sort-select');
+    let debounceTimer;
+
+    // 1. Enviar formulario al cambiar el <select> de ordenamiento
+    sortSelect.addEventListener('change', () => form.submit());
+
+    // 2. Enviar formulario al buscar, pero con una pausa (debounce)
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            form.submit();
+        }, 500); // 500ms de espera
+    });
+
+    // 3. Prevenir envío con Enter para una mejor experiencia
+    form.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && document.activeElement === searchInput) {
+            event.preventDefault();
+            form.submit();
+        }
+    });
+});
+</script>
+
+{% endblock %}
