@@ -20,15 +20,6 @@ class Comment(models.Model):
         verbose_name='Artículo'
     )
 
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='replicas',
-        verbose_name='Comentario padre'
-    )
-
     content = models.TextField(
         max_length=500,
         verbose_name='Contenido'
