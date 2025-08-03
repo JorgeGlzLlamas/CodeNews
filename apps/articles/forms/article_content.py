@@ -32,15 +32,3 @@ class ArticleContentForm(forms.ModelForm):
                 }
             ),
         }
-
-    def __init__(self, *args, from_update=False, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.from_update = from_update
-
-        # Elimina campos si es actualización o detalle
-        if self.from_update:
-            del self.fields['published_at']
-            del self.fields['status']
-
-            
-

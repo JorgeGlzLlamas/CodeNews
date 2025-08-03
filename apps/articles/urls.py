@@ -16,8 +16,7 @@ urlpatterns = [
     path('<slug:title>/editar/',
          articles.ArticleUpdateView.as_view(),
          name='article_update'),
-    # Set update flag for redirecting after content creation
-    path('<slug:slug>/set-update-flag/',
-         articles.set_from_update_view,
-         name='set_update_flag')
+     path('preview/markdown/', 
+          articles.MarkdownPreviewView.as_view(),
+          name='markdown_preview'),
 ]
