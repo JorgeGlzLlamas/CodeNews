@@ -7,7 +7,7 @@
 <div class="container">
     <div class="page-header">
         <div class="row align-items-center mw-100">
-            <div class="col-lg-8 m-auto">
+            <div class="col-12 col-md-10 col-lg-8 m-auto">
                 <div class="mb-1">
                     <ol class="breadcrumb" aria-label="breadcrumbs">
                         <li class="breadcrumb-item">
@@ -27,9 +27,9 @@
     </div>
     <div class="page-body">
         <div class="row">
-            <div class="col-lg-8 m-auto">
-                {% include 'partials/messages.html' %}
+            <div class="col-12 col-md-10 col-lg-8 m-auto">
                 <h2 class="page-title mb-3 gradient-text-title">Editar artículo</h2>
+                {% include 'partials/messages.html' %}
                 <div class="card">
                     <div class="card-body">
                         <form method="post" enctype="multipart/form-data">
@@ -80,7 +80,7 @@
                             </div>
                             <div class="mb-3 text-end d-flex justify-content-end align-items-center">
                                 <a class="btn theme-btn2 border-0 text-white me-2"
-                                        href="{% url 'articles:set_update_flag' slug=article.slug %}">
+                                        href="{% url 'articles:article_content' article.slug %}">
                                     Editar contenido
                                 </a>
                                 <button type="submit" class="btn theme-btn7 text-white">Guardar</button>

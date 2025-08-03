@@ -1,29 +1,24 @@
 from django.views.generic import CreateView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import DetailView
 
 import markdown
-import logging
-from django.http import HttpResponse, JsonResponse
-from django.utils.safestring import mark_safe
-import re
-
+from django.http import HttpResponse
+from articles.utils.procesar_markdown import process_markdown_util
 
 from articles.models.articles import Articles
 from users.models.user_rol import Rol
 from articles.forms.article_data import ArticleDataCreateForm, ArticleDataUpdateForm
 from articles.forms.article_content import ArticleContentForm
 
-
+import logging
+import re
 logger = logging.getLogger(__name__)
-
-def set_from_update_view(request, slug):
-    request.session['came_from_update'] = True
-    return redirect('articles:article_content', title=slug)    
 
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
@@ -50,7 +45,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Hubo un error al crear el artículo.')
+        messages.error(self.request, f'Hubo un error al crear el artículo.{form.errors}')
         return super().form_invalid(form)
 
     # Función para redireccionar al detalle del artículo
@@ -58,13 +53,11 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return reverse('articles:article_content', kwargs={'title': self.object.slug})
 
 
-class ArticleUpdateView(LoginRequiredMixin, PermissionRequiredMixin,
-                        UpdateView):
+class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     """View to update an article."""
     model = Articles
     form_class = ArticleDataUpdateForm
     template_name = 'articles/update_form.html'
-    permission_required = 'articles.change_article'
     slug_url_kwarg = 'title'
     context_object_name = 'article'
 
@@ -104,12 +97,11 @@ class ArticleUpdateView(LoginRequiredMixin, PermissionRequiredMixin,
         return reverse('articles:article_update', kwargs={'title': self.object.slug})
 
 
-class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ArticleContentView(LoginRequiredMixin, UpdateView):
     """Vista para editar el contenido de un artículo."""
     model = Articles
     form_class = ArticleContentForm
     template_name = 'articles/content_form.html'
-    permission_required = 'articles.change_article'
     slug_url_kwarg = 'title'
     context_object_name = 'article'
 
@@ -128,71 +120,15 @@ class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         if not (is_owner or is_staff or is_moderator):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        """Pasa argumentos adicionales al formulario."""
-        kwargs = super().get_form_kwargs()
-        if self.request.session.pop('came_from_update', False):
-            kwargs['from_update'] = True
-        return kwargs
     
-    def get_success_url(self):
-        return reverse('articles:article_detail', kwargs={'slug': self.object.slug})
-
-    def post(self, request, *args, **kwargs):
-        """Maneja solicitudes POST para vista previa o guardado."""
-        if 'preview' in request.POST:
-            markdown_content = request.POST.get('content', '')
-            html_content = self.process_markdown(markdown_content)
-            return HttpResponse(html_content)
-        else:
-            return super().post(request, *args, **kwargs)
-
-    def process_markdown(self, markdown_content):
-        """Procesa el contenido Markdown y devuelve HTML."""
-        extensions = [
-            'markdown.extensions.fenced_code',    # Bloques de código
-            'markdown.extensions.tables',         # Tablas
-            'markdown.extensions.nl2br',          # Saltos de línea
-            'markdown.extensions.toc',            # Tabla de contenidos
-            'markdown.extensions.codehilite',     # Resaltado de sintaxis
-            'markdown.extensions.extra',          # Extensiones adicionales
-            'markdown.extensions.footnotes',      # Notas al pie
-            'markdown.extensions.admonition',     # Cajas de advertencia
-        ]
-
-        extension_configs = {
-            'markdown.extensions.codehilite': {
-                'css_class': 'highlight',
-                'use_pygments': True,
-                'linenums': False,
-            },
-            'markdown.extensions.toc': {
-                'permalink': True,
-                'permalink_class': 'headerlink',
-                'permalink_title': 'Enlace permanente a este encabezado',
-            }
-        }
-
-        md = markdown.Markdown(
-            extensions=extensions,
-            extension_configs=extension_configs,
-            tab_length=4
-        )
-
-        html_content = md.convert(markdown_content)
-
-        if not markdown_content.strip():
-            html_content = '''
-            <div class="text-center text-muted py-5">
-                <i class="bi bi-eye display-4 mb-3"></i>
-                <h4>Preview aparecerá aquí</h4>
-                <p>Comienza a escribir en la pestaña "Escribir" para ver el resultado</p>
-            </div>
-            '''
-
-        return html_content
-
+    def get_context_data(self, **kwargs):
+        """Añade el HTML del preview inicial al contexto."""
+        context = super().get_context_data(**kwargs)
+        # Generamos el preview del contenido existente en la carga inicial
+        initial_content = self.get_object().content or ''
+        context['initial_preview_html'] = process_markdown_util(initial_content)
+        return context
+    
     def form_valid(self, form):
         """Maneja el caso de formulario válido."""
         messages.success(self.request, 'Contenido del artículo actualizado.')
@@ -203,6 +139,20 @@ class ArticleContentView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         messages.error(self.request, 'Ocurrió un error!')
         return super().form_invalid(form)
     
+    def get_success_url(self):
+        return reverse('articles:article_content', kwargs={'title': self.object.slug})
+
+
+class MarkdownPreviewView(View):
+    """Procesa y devuelve un preview de Markdown."""
+    
+    def post(self, request, *args, **kwargs):
+        markdown_content = request.POST.get('content', '')
+        # Aquí puedes añadir la misma lógica de permisos si quieres proteger el endpoint
+        # por ejemplo, verificando que el usuario esté autenticado.
+        html_content = process_markdown_util(markdown_content)
+        return HttpResponse(html_content)
+
 
 class ArticleDetailView(DetailView):
     model = Articles

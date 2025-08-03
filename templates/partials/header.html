@@ -40,7 +40,7 @@
           </div>
 
           <!-- Login o Usuario -->
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
           <!-- Usuario autenticado -->
           <div class="nav-item dropdown">
             <a
@@ -50,15 +50,15 @@
             >
               <span
                 class="avatar m-0 ms-2 me-2"
-                style="width: 30px; height: 30px; background-image: url('{{ user.avatar_image.url }}')"
+                style="width: 30px; height: 30px; background-image: url('{{ request.user.avatar_image.url }}')"
               ></span>
               <span class="d-none d-xl-inline pe-2 fs-4"
-                >{{ user.username }}</span
+                >{{ request.user.username }}</span
               >
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
               <a
-                href="{% url 'users:profile' user.slug %}"
+                href="{% url 'users:profile' request.user.slug %}"
                 class="dropdown-item"
                 >Perfil</a
               >
