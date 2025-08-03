@@ -1,118 +1,93 @@
+{% extends 'base_forms.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CodeNews | Registro</title>
-    <meta name="description" content="Tailwind CSS Saas HTML Template Is A Multi Purpose Landing Page Template, Corporate, Authentication, Launching Web, Agency or Business Startup, Clean, Modern, Creative, Multipurpose and Tailwind CSS Tailwind v3 etc." />
-    <meta name="author" content="Zoyothemes" />
+{% block content %}
+  <section class="h-screen w-full">
+    <body>
+      <div class="row g-0 flex-fill">
+        <div class="col-12 col-lg-6 col-xl-4 border-top-wide border-primary d-flex flex-column justify-content-center">
+          <div class="container container-tight my-5 px-lg-5">
+            <div class="text-center mb-4">
+              <img src="{% static 'vexon/img/logo/cdnews.png' %}" class="navbar-brand-image" alt="cdnews" style="height: 36px;" />
+            </div>
+            <h2 class="h3 text-center mb-3">Crea una cuenta</h2>
+            <form action="{% url 'users:register' %}" method="post" autocomplete="off" novalidate>
+              {% csrf_token %}
 
-    <!-- favicon -->
-    <link rel="shortcut icon" href="assets/img/logo/Logo_CN.png" type="image/x-icon" />
+              {% if form.non_field_errors %}
+                <div class="bg-red-100 text-red-700 p-3 rounded">{{ form.non_field_errors|join:', ' }}</div>
+              {% endif %}
 
-    <!-- Main Css -->
-    <link href="{% static 'assets/dist/assets/css/style.css' %}" rel="stylesheet" type="text/css" />
-  </head>
+              <div class="card-body">
+                <div class="mb-3">
+                  {{ form.username.label_tag }}
+                  {{ form.username }}
+                  {% if form.username.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.username.errors|join:', ' }}</p>
+                  {% endif %}
+                </div>
 
-  <body>
-    <!-- =========== Main Section Start =========== -->
-    <section class="h-screen w-full">
-      <div class="grid xl:grid-cols-2 grid-cols-1 h-full">
-        <div class="max-w-lg mx-auto w-full flex flex-col justify-center md:items-start items-center p-6">
-          <div class="md:text-start text-center mb-7">
-            <a href="index.html" class="grow block mb-8"><img class="img-fluid mx-auto md:mx-0 d-block" src="{% static 'assets/img/logo/cdnews.png' %}" alt="images" style="width: 120px; height: auto;" /></a>
+                <div class="mb-3">
+                  {{ form.email.label_tag }}
+                  {{ form.email }}
+                  {% if form.email.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.email.errors|join:', ' }}</p>
+                  {% endif %}
+                </div>
 
-            <div class="md:text-start text-center">
-              <h3 class="text-2xl font-semibold text-dark mb-3">Crear una cuenta</h3>
+                <div class="mb-3">
+                  {{ form.first_name.label_tag }}
+                  {{ form.first_name }}
+                  {% if form.first_name.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors|join:', ' }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3">
+                  {{ form.last_name.label_tag }}
+                  {{ form.last_name }}
+                  {% if form.last_name.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors|join:', ' }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3 position-relative">
+                  {{ form.password1.label_tag }}
+                  {{ form.password1 }}
+                  {% if form.password1.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password1.errors|join:', ' }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3">
+                  {{ form.password2.label_tag }}
+                  {{ form.password2 }}
+                  {% if form.password2.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password2.errors|join:', ' }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-check">
+                    <input type="checkbox" class="form-check-input" required />
+                    <span class="form-check-label">Acepto los <a href="./terms-of-service.html" tabindex="-1">términos y condiciones</a>.</span>
+                  </label>
+                </div>
+
+                <div class="form-footer">
+                  <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                </div>
+              </div>
+            </form>
+            <div class="text-center text-secondary mt-3">
+              ¿Ya tienes una cuenta? <a href="{% url 'users:login' %}" tabindex="-1">Inicia sesión</a>
             </div>
           </div>
-
-          <form method="post" class="text-start w-full space-y-4">
-            {% csrf_token %}
-
-            <!-- Errores generales del formulario -->
-            {% if form.non_field_errors %}
-              <div class="bg-red-100 text-red-700 p-3 rounded">{{ form.non_field_errors|join:', ' }}</div>
-            {% endif %}
-
-            <!-- Campo: Nombre de usuario -->
-            <div>
-              {{ form.username.label_tag }}
-              {{ form.username }}
-              {% if form.username.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.username.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Correo electrónico -->
-            <div>
-              {{ form.email.label_tag }}
-              {{ form.email }}
-              {% if form.email.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.email.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Nombre(s) -->
-            <div>
-              {{ form.first_name.label_tag }}
-              {{ form.first_name }}
-              {% if form.first_name.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Apellido(s) -->
-            <div>
-              {{ form.last_name.label_tag }}
-              {{ form.last_name }}
-              {% if form.last_name.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Contraseña -->
-            <div>
-              {{ form.password1.label_tag }}
-              {{ form.password1 }}
-              {% if form.password1.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.password1.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Confirmar contraseña -->
-            <div>
-              {{ form.password2.label_tag }}
-              {{ form.password2 }}
-              {% if form.password2.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.password2.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Botón de registro -->
-            <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-primary font-bold text-base text-white rounded-md transition-all duration-500 mt-5">Registrarse</button>
-
-            <p class="shrink text-light text-center mt-6">
-              ¿Ya tienes cuenta? <a href="{% url 'users:login' %}" class="text-dark font-semibold ms-1"><b>Inicia sesión</b></a>
-            </p>
-          </form>
         </div>
-
-        <div class="hidden xl:block">
-          <div class="relative w-full h-screen bg-center bg-cover" style="background-image: url('{% static 'assets/img/logins/login.jpg' %}');"></div>
+        <div class="col-12 col-lg-6 col-xl-8 d-none d-lg-block">
+          <!-- Photo -->
+          <div class="bg-cover h-100 min-vh-100" style="background-image: url('{% static 'vexon/img/logo/cdnews.png' %}');"></div>
         </div>
       </div>
-    </section>
-    <!-- =========== Main Section End =========== -->
-
-    <!-- Preline Js -->
-    <script src="{% static 'assets/libs/preline/preline.js' %}"></script>
-
-    <!-- Lucide Js -->
-    <script src="{% static 'assets/libs/lucide/umd/lucide.min.js' %}"></script>
-
-    <!-- Main App Js -->
-    <script src="{% static 'assets/js/app.js' %}"></script>
-  </body>
-</html>
+    </body>
+  </section>
+{% endblock %}
