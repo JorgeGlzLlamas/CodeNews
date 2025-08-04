@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}Codenews{% endblock %}
 
 {% block content %}
 
@@ -8,7 +9,7 @@
     <div class="row mb-4">
         <div class="col-lg-8">
             <h2 class="display-5 fw-bold gradient-text-title">En Boca de Todos</h2>
-            <p class="lead text-muted">Las publicaciones más populares del momento, elegidas por nuestra comunidad.</p>
+            <p class="lead text-muted fs-3">Las publicaciones más populares del momento, elegidas por nuestra comunidad.</p>
         </div>
     </div>
     <div id="popularArticlesCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
@@ -22,12 +23,12 @@
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
                 <div class="ratio ratio-21x9" style="background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 10%, rgba(0, 0, 0, 0) 70%), url('{% if article.thumbnail_image %}{{ article.thumbnail_image.url }}{% else %}{% static 'assets/img/placeholder-large.jpg' %}{% endif %}'); background-size: cover; background-position: center;"></div>
                 <div class="carousel-caption text-start p-3 p-lg-5">
-                    <a href="{% url 'core:articles_by_category' article.category.slug %}" class="badge bg-primary text-white rounded-pill mb-2">{{ article.category.name|default:"General" }}</a>
+                    <a href="{% url 'core:articles_by_category' article.category.slug %}" class="badge bg-primary text-white rounded-pill mb-2 text-decoration-none">{{ article.category.name|default:"General" }}</a>
                     <h1 class="text-white fw-bold h3 h1-lg mb-2">
                         <a href="{% url 'articles:article_detail' article.slug %}" class="text-white text-decoration-none">{{ article.title|truncatechars:80 }}</a>
                     </h1>
                     <p class="text-white-80 mb-3 small">Por {{ article.user.get_full_name|default:"Autor" }} &bull; {{ article.published_at|date:"d M, Y" }}</p>
-                    <a href="{% url 'articles:article_detail' article.slug %}" class="theme-btn1 text-white">Ver Artículo</a>
+                    <a href="{% url 'articles:article_detail' article.slug %}" class="btn theme-btn2 btn-pill text-white">Ver Artículo</a>
                 </div>
             </div>
             {% endfor %}
@@ -43,17 +44,17 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="display-5 fw-bold gradient-text-title">Categorías Populares</h2>
-            <p class="text-muted fs-5">Explora nuestras colecciones de artículos por tema</p>
+            <p class="text-muted fs-3">Explora nuestras colecciones de artículos por tema</p>
         </div>
         <a href="{% url 'core:categorias' %}" class="btn theme-btn7 text-white">Ver todas</a>
     </div>
     
     <div class="row g-4">
         {% for category in popular_categories|slice:":4" %}
-        <div class="col-lg-3 col-md-6">
+        <div class="col-12 col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm overflow-hidden">
                 <div class="position-relative">
-                    <img src="{% if category.image %}{{ category.image.url }}{% else %}{% static 'assets/img/placeholder-category.jpg' %}{% endif %}" 
+                    <img src="{{ category.image.url }}" 
                          alt="{{ category.name }}" 
                          class="card-img-top object-fit-cover" style="height: 180px;">
                     <div class="position-absolute bottom-0 start-0 p-3">
@@ -73,7 +74,7 @@
                     {% endif %}
                     <div class="mt-auto">
                         <a href="{% url 'core:articles_by_category' category.slug %}" 
-                           class="theme-btn1 rounded-pill w-100">
+                           class="btn theme-btn1 rounded-pill text-white w-100">
                             Explorar
                         </a>
                     </div>
@@ -96,7 +97,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="display-5 fw-bold gradient-text-title">Lo Último de Nuestro Blog</h2>
-            <p class="text-muted fs-5">Mantente al día con nuestras publicaciones</p>
+            <p class="text-muted fs-3">Mantente al día con nuestras publicaciones</p>
         </div>
     </div>
     
@@ -106,7 +107,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <a href="{% url 'articles:article_detail' article.slug %}" class="text-decoration-none">
                     <div class="position-relative">
-                        <img src="{% if article.thumbnail_image %}{{ article.thumbnail_image.url }}{% else %}{% static 'assets/img/placeholder-large.jpg' %}{% endif %}" 
+                        <img src="{{ article.thumbnail_image.url }}" 
                              alt="{{ article.title }}" 
                              class="card-img-top object-fit-cover" style="height: 200px;">
                         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-10"></div>
@@ -126,25 +127,24 @@
                             {{ article.title|truncatechars:60 }}
                         </a>
                     </h3>
-                    <p class="text-muted mb-4">{{ article.description|truncatechars:100 }}</p>
+                    <p class="text-muted">{{ article.description|truncatechars:100 }}</p>
                 </div>
                 <div class="card-footer bg-transparent border-top pt-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            {% if article.user.avatar_image %}
+
+                        <a  href="{% url 'core:autor' article.user.slug %}" class="d-flex align-items-center text-decoration-none">
                             <img src="{{ article.user.avatar_image.url }}" 
                                  alt="{{ article.user.get_full_name }}" 
                                  class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
-                            {% else %}
-                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                <i class="ti ti-user text-muted"></i>
-                            </div>
-                            {% endif %}
                             <div>
-                                <div class="fw-semibold">{{ article.user.get_full_name }}</div>
+                                {% if article.user.privacy.username_or_name == 'name' %}
+                                    <div class="fw-semibold">{{ article.user.get_full_name }}</div>
+                                {% else %}
+                                    <div class="fw-semibold">{{ article.user.username }}</div>
+                                {% endif %}
                                 <div class="text-muted small">@{{ article.user.username }}</div>
                             </div>
-                        </div>
+                        </a>
                         <div class="text-muted small">
                             <i class="ti ti-calendar-event me-1"></i>{{ article.published_at|date:"d M, Y" }}
                         </div>
@@ -169,73 +169,52 @@
     <div class="d-flex align-items-center mb-4">
         <div>
             <h2 class="display-5 fw-bold gradient-text-title">Autores Destacados</h2>
-            <p class="text-secondary mt-1">Conoce a los creadores de nuestro contenido.</p>
+            <p class="text-secondary mt-1 fs-3">Conoce a los creadores de nuestro contenido.</p>
         </div>
         <a href="{% url 'core:autores' %}" class="btn theme-btn7 text-white ms-auto">Ver todos</a>
     </div>
 
     <div class="row g-4">
-    {% for author in featured_authors %}
-    <div class="col-lg-2 col-md-4 col-sm-6 author-card" 
-         data-aos="fade-up" data-aos-offset="50" data-aos-duration="400">
-        
-        <div class="top-author-box blog1-cetegory-box text-center h-100 shadow-sm rounded-3 d-flex flex-column">
-            <div class="image image-anime position-relative flex-grow-0">
-                <a href="{% url 'core:autor' author.id %}">
-                    <img src="{% if author.avatar_image %}{{ author.avatar_image.url }}{% else %}{% static 'assets/img/placeholder-author.jpg' %}{% endif %}" 
-                         alt="Avatar de {{ author.get_full_name|default:author.username }}"
-                         style="width: 100%; height: 200px; object-fit: cover;">
+        {% for author in featured_authors %}
+            <div class=" col-xl-2 col-lg-3 col-md-4 col-sm-6 author-card" 
+                data-aos="fade-up" data-aos-offset="50" data-aos-duration="400">
+
+                <a href="{% url 'core:autor' author.id %}" class="text-decoration-none d-block h-100">
+                    <div class="top-author-box blog1-cetegory-box text-center h-100 shadow-sm rounded-3 d-flex flex-column">
+                        
+                        <div class="image image-anime position-relative flex-grow-0">
+                            <img src="{% if author.avatar_image %}{{ author.avatar_image.url }}{% else %}{% static 'assets/img/placeholder-author.jpg' %}{% endif %}" 
+                                alt="Avatar de {{ author.get_full_name|default:author.username }}"
+                                style="width: 100%; height: 200px; object-fit: cover;">
+                        </div>
+
+                        <div class="heading1 p-3 d-flex flex-column flex-grow-1">
+                            <strong class="mb-1 fs-3">
+                                <span class="text-dark">
+                                    {% if author.privacy.username_or_name == 'name' %}
+                                        {{ author.get_full_name }}
+                                    {% else %}
+                                        {{ author.username }}
+                                    {% endif %}
+                                </span>
+                            </strong>
+                            <div>
+                                <span class="badge bg-primary text-primary-fg badge-pill">{{ author.article_count }}</span>
+                                <span class="text-muted">Artículo</span>
+                            </div>
+                        </div>
+                    </div>
                 </a>
-                <div class="social6">
-                    <ul>
-                        {% for social in author.social_media.all %}
-                        <li>
-                            <a href="{{ social.link }}" target="_blank"><i class="ti ti-brand-{{ social.platform }}"></i></a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
             </div>
-            
-            <div class="heading1 p-3 d-flex flex-column flex-grow-1">
-                <div class="flex-grow-1">
-                    <h5 class="mb-1">
-                        <a href="{% url 'core:autor' author.id %}" class="text-dark text-decoration-none">
-                            {% if author.privacy.username_or_name == 'name' %}
-                                {{ author.get_full_name }}
-                            {% else %}
-                                {{ author.username }}
-                            {% endif %}
-                        </a>
-                    </h5>
-                    {% if author.rol %}
-                        <p class="text-muted small mb-2">{{ author.rol.name }}</p>
-                    {% endif %}
-
-                    {% if author.privacy.bio_is_public and author.bio %}
-                    <p class="card-text text-muted fst-italic small mb-2">
-                        "{{ author.bio|truncatechars:80 }}"
-                    </p>
-                    {% endif %}
-                </div>
-
-                <div class="mt-auto">
-                    <p class="text-muted small mb-2">{{ author.article_count }} Artículo{{ author.article_count|pluralize }}</p>
-                    <a href="{% url 'core:autor' author.id %}" class="btn theme-btn7 text-white w-100">
-                        Ver Autor
-                    </a>
-                </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="alert alert-warning">
+                <h3 class="alert-title"><i class="ti ti-zoom-cancel me-2"></i>Sin Resultados</h3>
+                <p class="text-muted">No se encontraron autores destacados.</p>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <div class="col-12 text-center py-5">
-        <div class="alert alert-warning">
-            <h3 class="alert-title"><i class="ti ti-zoom-cancel me-2"></i>Sin Resultados</h3>
-            <p class="text-muted">No se encontraron autores destacados.</p>
-        </div>
-    </div>
-    {% endfor %}
 </div>
 {% endif %}
 
