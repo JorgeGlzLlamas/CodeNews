@@ -53,6 +53,15 @@ class UserRegistrationForm(UserCreationForm):
                 'autocomplete': 'family-name'
             }),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Añadir clase 'is-invalid' a campos con errores
+        for name, field in self.fields.items():
+            if self.errors.get(name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f'{existing} is-invalid'
 
 
 class LoginForm(AuthenticationForm):
@@ -73,6 +82,15 @@ class LoginForm(AuthenticationForm):
             'autocomplete': 'current-password',
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Añadir clase 'is-invalid' a campos con errores
+        for name, field in self.fields.items():
+            if self.errors.get(name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f'{existing} is-invalid'
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
@@ -104,3 +122,12 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             'autocomplete': 'new-password',
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Añadir clase 'is-invalid' a campos con errores
+        for name, field in self.fields.items():
+            if self.errors.get(name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f'{existing} is-invalid'
