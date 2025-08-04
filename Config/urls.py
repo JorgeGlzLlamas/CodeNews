@@ -9,7 +9,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('usuario/', include('users.urls')),
     path('articulo/', include('articles.urls')),
-    path('comentarios/', include('comments.urls')),
+    path('comentario/', include('comments.urls')),
 ]
 
 if settings.DEBUG:
