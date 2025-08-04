@@ -1,118 +1,95 @@
+{% extends 'base_forms.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CodeNews | Registro</title>
-    <meta name="description" content="Tailwind CSS Saas HTML Template Is A Multi Purpose Landing Page Template, Corporate, Authentication, Launching Web, Agency or Business Startup, Clean, Modern, Creative, Multipurpose and Tailwind CSS Tailwind v3 etc." />
-    <meta name="author" content="Zoyothemes" />
+{% block title %}Registrarse{% endblock %}
 
-    <!-- favicon -->
-    <link rel="shortcut icon" href="assets/img/logo/Logo_CN.png" type="image/x-icon" />
+{% block content %}
 
-    <!-- Main Css -->
-    <link href="{% static 'assets/dist/assets/css/style.css' %}" rel="stylesheet" type="text/css" />
-  </head>
+<h2 class="page-title mb-3 gradient-text-title text-center">Crea una cuenta</h2>
 
-  <body>
-    <!-- =========== Main Section Start =========== -->
-    <section class="h-screen w-full">
-      <div class="grid xl:grid-cols-2 grid-cols-1 h-full">
-        <div class="max-w-lg mx-auto w-full flex flex-col justify-center md:items-start items-center p-6">
-          <div class="md:text-start text-center mb-7">
-            <a href="index.html" class="grow block mb-8"><img class="img-fluid mx-auto md:mx-0 d-block" src="{% static 'assets/img/logo/cdnews.png' %}" alt="images" style="width: 120px; height: auto;" /></a>
+{% include 'partials/messages.html' %}
 
-            <div class="md:text-start text-center">
-              <h3 class="text-2xl font-semibold text-dark mb-3">Crear una cuenta</h3>
-            </div>
-          </div>
+<form action="{% url 'users:register' %}" method="post" autocomplete="off" novalidate>
+  {% csrf_token %}
 
-          <form method="post" class="text-start w-full space-y-4">
-            {% csrf_token %}
+  <div class="card-body">
 
-            <!-- Errores generales del formulario -->
-            {% if form.non_field_errors %}
-              <div class="bg-red-100 text-red-700 p-3 rounded">{{ form.non_field_errors|join:', ' }}</div>
-            {% endif %}
-
-            <!-- Campo: Nombre de usuario -->
-            <div>
-              {{ form.username.label_tag }}
-              {{ form.username }}
-              {% if form.username.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.username.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Correo electrónico -->
-            <div>
-              {{ form.email.label_tag }}
-              {{ form.email }}
-              {% if form.email.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.email.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Nombre(s) -->
-            <div>
-              {{ form.first_name.label_tag }}
-              {{ form.first_name }}
-              {% if form.first_name.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Apellido(s) -->
-            <div>
-              {{ form.last_name.label_tag }}
-              {{ form.last_name }}
-              {% if form.last_name.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Contraseña -->
-            <div>
-              {{ form.password1.label_tag }}
-              {{ form.password1 }}
-              {% if form.password1.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.password1.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Campo: Confirmar contraseña -->
-            <div>
-              {{ form.password2.label_tag }}
-              {{ form.password2 }}
-              {% if form.password2.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.password2.errors|join:', ' }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Botón de registro -->
-            <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-primary font-bold text-base text-white rounded-md transition-all duration-500 mt-5">Registrarse</button>
-
-            <p class="shrink text-light text-center mt-6">
-              ¿Ya tienes cuenta? <a href="{% url 'users:login' %}" class="text-dark font-semibold ms-1"><b>Inicia sesión</b></a>
-            </p>
-          </form>
+    <!-- Nombre de usuario -->
+    <div class="mb-3">
+      <label for="{{ form.username.id_for_label }}" class="form-label">Nombre de usuario:</label>
+      {{ form.username }}
+      {% if form.username.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.username.errors|join:", " }}
         </div>
+      {% endif %}
+    </div>
 
-        <div class="hidden xl:block">
-          <div class="relative w-full h-screen bg-center bg-cover" style="background-image: url('{% static 'assets/img/logins/login.jpg' %}');"></div>
+    <!-- Correo electrónico -->
+    <div class="mb-3">
+      <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico:</label>
+      {{ form.email }}
+      {% if form.email.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.email.errors|join:", " }}
         </div>
-      </div>
-    </section>
-    <!-- =========== Main Section End =========== -->
+      {% endif %}
+    </div>
 
-    <!-- Preline Js -->
-    <script src="{% static 'assets/libs/preline/preline.js' %}"></script>
+    <!-- Nombre(s) -->
+    <div class="mb-3">
+      <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre(s):</label>
+      {{ form.first_name }}
+      {% if form.first_name.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.first_name.errors|join:", " }}
+        </div>
+      {% endif %}
+    </div>
 
-    <!-- Lucide Js -->
-    <script src="{% static 'assets/libs/lucide/umd/lucide.min.js' %}"></script>
+    <!-- Apellido -->
+    <div class="mb-3">
+      <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido:</label>
+      {{ form.last_name }}
+      {% if form.last_name.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.last_name.errors|join:", " }}
+        </div>
+      {% endif %}
+    </div>
 
-    <!-- Main App Js -->
-    <script src="{% static 'assets/js/app.js' %}"></script>
-  </body>
-</html>
+    <!-- Contraseña -->
+    <div class="mb-3">
+      <label for="{{ form.password1.id_for_label }}" class="form-label">Contraseña:</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.password1.errors|join:", " }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Confirmar contraseña -->
+    <div class="mb-3">
+      <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmar contraseña:</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.password2.errors|join:", " }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Botón de registro -->
+    <div class="form-footer">
+      <button type="submit" class="btn theme-btn7 text-white w-100">Registrarse</button>
+    </div>
+
+  </div>
+</form>
+
+<!-- Enlace a login -->
+<div class="text-center text-secondary mt-3">
+  ¿Ya tienes una cuenta? <a href="{% url 'users:login' %}" tabindex="-1">Inicia sesión</a>
+</div>
+
+{% endblock %}

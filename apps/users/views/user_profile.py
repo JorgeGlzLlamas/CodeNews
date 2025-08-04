@@ -1,14 +1,19 @@
 from django.contrib import messages
 from django.urls import reverse
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 
 from users.models.user import User
 from users.models.user_privacity import UserPrivacy
+from users.models.socialmedia import SocialMedia
 from users.utils.perfil_usuario import acceso_perfil, permiso_editar
-from users.forms.perfil_usuario import UserProfileForm, UserProfilePrivacyForm
+from users.forms.perfil_usuario import (
+    UserProfileForm, UserProfilePrivacyForm,
+    UserProfileSocialMediaForm
+)
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
@@ -39,9 +44,11 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         user_privacy = get_object_or_404(UserPrivacy, user=user)
         # Pasar los permisos del usuario actual
         context['can_edit'] = permiso_editar.permiso_editar(user, current_user)
+        context['user_owner'] = user == current_user
         # Pasar al contexto los formularios
         context['profile_form'] = UserProfileForm(instance=user)
         context['privacy_form'] = UserProfilePrivacyForm(instance=user_privacy)
+        context['social_form'] = UserProfileSocialMediaForm(user=user)
         return context
 
 
@@ -99,3 +106,43 @@ class ProfilePrivacyView(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self):
         return reverse('users:profile', kwargs={'username': self.user.slug})
+    
+
+class ProfileSocialMediaCreateView(LoginRequiredMixin, CreateView):
+    """Create social media link for user."""
+    model = SocialMedia
+    form_class = UserProfileSocialMediaForm
+    template_name = 'partials/profile_social_media_form.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'username'
+
+    def dispatch(self, request, *args, **kwargs):
+        username = self.kwargs.get(self.slug_url_kwarg)
+        self.user = get_object_or_404(User, slug=username)
+        if (self.user != request.user):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.user = self.user
+        messages.success(self.request, '¡Red social añadida correctamente!')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, '¡Error al añadir la red social!')
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('users:profile', kwargs={'username': self.user.slug})
+
+
+class ProfileSocialMediaDeleteView(LoginRequiredMixin, View):
+    """Delete social media link for user."""
+    
+    def post(self, request, *args, **kwargs):
+        social_media_id = self.kwargs.get('pk')
+        self.user = request.user
+        social_media = get_object_or_404(SocialMedia, id=social_media_id)
+        social_media.delete()
+        messages.success(request, '¡Red social eliminada correctamente!')
+        return redirect('users:profile', username=request.user.slug)

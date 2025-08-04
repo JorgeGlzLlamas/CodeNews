@@ -1,21 +1,64 @@
-<h1>Nuevo artículo</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-        <label>Título</label>
-        {{ form.title}}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Nuevo Artículo {% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <div class="row align-items-center mw-100">
+            <div class="col-12 col-md-10 col-lg-8 m-auto">
+                <div class="mb-1">
+                    <ol class="breadcrumb" aria-label="breadcrumbs">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'core:home' %}">Inicio</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'users:profile' user.slug %}">Perfil usuario</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <a href="#">Artículo</a>
+                        </li>
+                    </ol>
+                </div>
+                <!-- <h2 class="page-title mb-3">Crear nuevo artículo</h2> -->
+            </div>
+        </div>
     </div>
-    <div>
-        <label>Categoría</label>
-        {{ form.category }}
+    <div class="page-body">
+        <div class="row">
+            <div class="col-12 col-md-10 col-lg-8 m-auto">
+                <h2 class="page-title mb-3 gradient-text-title">Crear nuevo artículo</h2>
+                {% include 'partials/messages.html' %}
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Encabezado</label>
+                                {{ form.title }}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Categoría</label>
+                                {{ form.category }}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Descripción</label>
+                                {{ form.description }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_thumbnail_image" class="form-label">Imagen del artículo</label>
+                                {{ form.thumbnail_image }}
+                            </div>
+
+                            <div class="mb-3 text-end">
+                                <button type="submit" class="btn theme-btn7 w-25 text-white">Continuar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label>Descripción</label>
-        {{ form.description}}
-    </div>
-    <div>
-        <label>Imagen</label>
-        {{ form.thumbnail_image }}
-    </div>
-    <button type="submit">Continuar</button>
-</form>
+</div>
+{% endblock %}

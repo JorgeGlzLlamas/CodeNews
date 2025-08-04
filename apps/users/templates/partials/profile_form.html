@@ -1,44 +1,84 @@
 <!-- Formulario de datos del usuario -->
-<div>
-    <h2>Información del perfil</h2>
-    <form method="post" action={% url 'users:profile_update' user.slug %}
-        enctype="multipart/form-data">
-        {% csrf_token %}
-            <div>
-                <label>Avatar</label>
-                {{ form.avatar_image }}
+<form method="post" action={% url 'users:profile_update' user.slug %}
+    enctype="multipart/form-data" id="profile-form">
+    {% csrf_token %}
+    
+    <div class="row">
+        <div class="col-12 m-auto">
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+                <h3 class=" gradient-text-title">
+                    <i class="ti ti-user-edit me-2 text-primary"></i>Editar Perfil
+                </h3>
+                {% if can_edit %}
+                    <button type="submit" class="btn theme-btn7 text-white">
+                        <i class="ti ti-device-floppy me-2"></i>Guardar Cambios
+                    </button>
+                {% endif %}
             </div>
-            <div>
-                <label>Nombre de usuario:</label>
-                {{ form.username }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Información Personal -->
+            <div class="card card-sm mb-4 border-0">
+                    <h5 class="card-title gradient-text-2">
+                        <i class="ti ti-id text-primary me-2"></i>Información Personal
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-user me-2"></i>Nombre de usuario
+                            </label>
+                            {{ form.username }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-mail me-2"></i>Email
+                            </label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-signature me-2"></i>Nombre
+                            </label>
+                            {{ form.first_name }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-signature me-2"></i>Apellido
+                            </label>
+                            {{ form.last_name }}
+                        </div>
+                    </div>
+                    <h5 class="card-title gradient-text-2">
+                        <i class="ti ti-address-book text-info me-2"></i>
+                        Información de Contacto
+                    </h5>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-phone me-2"></i>Teléfono
+                            </label>
+                            {{ form.phone }}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label text-muted">
+                                <i class="ti ti-book me-2"></i>Biografía
+                            </label>
+                            <div class="text-muted small mb-2">
+                                Escribe una breve descripción sobre ti
+                            </div>
+                            {{ form.bio }}
+                        </div>
+                    </div>
             </div>
-            
-            <div>
-                <label>Email:</label>
-                {{ form.email }}
-            </div>
-            
-            <div>
-                <label>Nombre:</label>
-                {{ form.first_name }}
-            </div>
-            
-            <div>
-                <label>Apellido:</label>
-                {{ form.last_name }}
-            </div>
-            
-            <div>
-                <label>Teléfono:</label>
-                {{ form.phone }}
-            </div>
-            
-            <div>
-                <label>Biografía:</label>
-                {{ form.bio }}
-            </div>
-            {% if can_edit%}
-                <button type="submit">Guardar Cambios</button>
-            {% endif %}
-    </form>
-</div>
+        </div>
+    </div>
+</form>

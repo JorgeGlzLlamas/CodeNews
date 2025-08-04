@@ -1,7 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from apps.users.views import authentication
-from users.views import user_profile
+from users.views import authentication, user_profile, forgot_password
 
 app_name = 'users'
 
@@ -29,5 +28,22 @@ urlpatterns = [
          name='profile_update'),
     path('<slug:username>/editar-privacidad/',
          user_profile.ProfilePrivacyView.as_view(),
-         name='profile_privacy')
+         name='profile_privacy'),
+    path('nueva-red-social/<slug:username>/',
+         user_profile.ProfileSocialMediaCreateView.as_view(),
+         name='social_media_create'),
+    path('eliminar-red-social/<int:pk>/',
+         user_profile.ProfileSocialMediaDeleteView.as_view(),
+         name='social_media_delete'),
+
+    # Reset Password URLs
+    path('password-reset/',
+         forgot_password.RequestPasswordResetView.as_view(),
+         name='request_password_reset'),
+    path('password-reset/verify-code/',
+         forgot_password.VerifyCodeView.as_view(),
+         name='verify_code'),
+    path('password-reset/new-password/',
+         forgot_password.CustomPasswordResetConfirmView.as_view(),
+         name='reset_new_password'),
 ]

@@ -1,0 +1,133 @@
+{% load static %}
+<!-- =====HEADER START======= -->
+<header>
+  <!-- Header superior con logo, buscador y botón login/usuario -->
+  <div class="header-area header-area6" id="header">
+    <div class="container">
+      <div class="d-flex align-items-center py-3">
+        <!-- Logo -->
+        <div class="site-logo6 d-flex align-items-center">
+          <a href="{% url 'core:home'%}" class="d-flex align-items-center">
+            <img
+              src="{% static 'vexon/img/logo/cdnews.png' %}"
+              alt="Logo"
+              style="width: auto; height: 60px"
+            />
+          </a>
+        </div>
+        <!-- Contenedor para menú y avatar alineados a la derecha -->
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <!-- Botón toggle para móvil -->
+          <button
+            class="navbar-toggler d-lg-none border-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- Buscador (solo en desktop) -->
+          <div class="d-none d-lg-block">
+            <div class="input-icon" style="width: 400px">
+              <input type="text" class="form-control" placeholder="Buscar…" />
+              <span class="input-icon-addon">
+                <i class="ti ti-search fs-2"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Login o Usuario -->
+          {% if request.user.is_authenticated %}
+          <!-- Usuario autenticado -->
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="btn btn-action d-flex align-items-center text-reset p-0"
+              data-bs-toggle="dropdown"
+            >
+              <span
+                class="avatar m-0 ms-2 me-2"
+                style="width: 30px; height: 30px; background-image: url('{{ request.user.avatar_image.url }}')"
+              ></span>
+              <span class="d-none d-xl-inline pe-2 fs-4"
+                >{{ request.user.username }}</span
+              >
+            </a>
+            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <a
+                href="{% url 'users:profile' request.user.slug %}"
+                class="dropdown-item"
+                >Perfil</a
+              >
+              <a href="{% url 'users:change_password' %}" class="dropdown-item"
+                >Cambiar contraseña</a
+              >
+              <div class="dropdown-divider"></div>
+              <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item">
+                  Cerrar sesión
+                </button>
+              </form>
+            </div>
+          </div>
+          {% else %}
+          <!-- No autenticado -->
+          <a class="btn theme-btn7 text-white" href="{% url 'users:login' %}">
+            Iniciar Sesión
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú responsive -->
+    <div
+      class="collapse d-lg-block navbar-collapse border-top pt-3 pb-3 mt-2"
+      id="mainNavbar"
+    >
+      <div class="container">
+        <!-- SOLO visible en móvil -->
+        <div class="d-lg-none mb-3">
+          <!-- Buscador -->
+          <div class="input-icon mb-3">
+            <input type="text" class="form-control" placeholder="Buscar…" />
+            <span class="input-icon-addon">
+              <i class="ti ti-search"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Menú principal -->
+        <div class="main-menu-ex main-menu-ex1 mb-3 mb-lg-0">
+          <ul
+            class="nav nav-pills flex-column flex-lg-row justify-content-center text-center"
+          >
+            <li class="nav-item">
+              <a class="nav-link {% if template_name == 'inicio' %} active {% endif %}"
+                  href="{% url 'core:home'%}">
+                Inicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if template_name == 'categorias' %} active {% endif %}" 
+                    href="{% url 'core:categorias' %}">
+                  Categorías
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if template_name == 'autores' %} active {% endif %}"
+                    href="{% url 'core:autores' %}">
+                  Autores
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- =====HEADER END======= -->

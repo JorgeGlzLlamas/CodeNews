@@ -20,15 +20,6 @@ class Comment(models.Model):
         verbose_name='Artículo'
     )
 
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='replicas',
-        verbose_name='Comentario padre'
-    )
-
     content = models.TextField(
         max_length=500,
         verbose_name='Contenido'
@@ -43,3 +34,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comentario de {self.user.username} en {self.article.title}'
+    
+    def is_liked_by(self, user):
+        """
+        Checks if the comment has been liked by a specific user.
+        Returns True if liked, False otherwise.
+        """
+        # Asegurarnos de que el usuario no sea anónimo para evitar errores
+        if user.is_anonymous:
+            return False
+        # Esta consulta es súper eficiente. .exists() devuelve True/False
+        # y no trae el objeto de la base de datos.
+        return self.likes_comentarios.filter(user=user).exists()

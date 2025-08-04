@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ article.title }} {% endblock %}
+
+{% block content %}
+<div class="blog-details1-all sp">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 m-auto">
+        <!-- Este es ahora el único contenedor principal dentro de la columna -->
+        <div class="blog-page3-single-box">
+
+          <!-- 1. Imagen Principal (ahora dentro del contenedor principal y al inicio) -->
+          <div class="_relative mt-20 text-center">
+            {% if article.thumbnail_image %}
+              <img
+                src="{{ article.thumbnail_image.url }}"
+                class="card-img-top"
+                style="height: 500px; object-fit: cover; border-radius: 8px;"
+                alt="{{ article.title }}"
+              />
+            {% endif %}
+          </div>
+
+          <!-- 2. Encabezado del Artículo (título, autor, etc.) -->
+          <div class="heading1 text-center m-0 p-5 pb-0 pt-0">
+            <div class="social-area pt-2">
+              <div class="author-area mb-2">
+                <div class="author">
+                  <div class="author-tumb">
+                    <img src="{{ article.user.avatar_image.url }}" alt="{{ article.user.username }}" />
+                  </div>
+                  <span class="author-text"> {{ article.user.first_name }} {{ article.user.last_name }}</span>
+                </div>
+                <div class="date">
+                  <span>Publicado el: {{ article.published_at|date:'d/m/Y' }}</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center ms-auto mb-2">
+                <form action="{% url 'articles:article_favorite_toggle' article.slug %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                  <button type="submit" class="btn btn-warning btn-sm">
+                      {% if article.is_favorited %}
+                          <i class="ti ti-star-filled me-1"></i> Quitar de Favoritos
+                      {% else %}
+                          <i class="ti ti-star me-1"></i> Añadir a Favoritos
+                      {% endif %}
+                  </button>
+                </form>
+              </div>
+            </div>
+            <h2 class="mt-3">{{ article.title }}</h2>
+            <p class="m-0">{{ article.description}}</p>
+          </div>
+
+          <!-- 3. Contenido Principal, Comentarios y Formulario (antes en un div separado, ahora dentro) -->
+          <div class="details content-area p-5">
+            {% for section in sections %}
+            <article class="mt-30">
+              <!-- El contenido del artículo ya no necesita la clase "heading1" para mantener un estilo de párrafo normal -->
+              {{ section|safe }}
+            </article>
+            {% endfor %}
+
+            <div class="comments-area">
+              <div class="heading1 mt-40">
+                <h3 id="comentarios">Comentarios ({{ comentarios.count }})</h3>
+                {% if not comentarios %}
+                <p class="mt-10">Sé el primero en comentar este artículo.</p>
+                {% endif %}
+              </div>
+            </div>
+            {% include 'partials/messages.html' %}
+
+            <div class="details-contact-area m-0 p-3">
+              <div>
+                <strong>Deja un comentario</strong>
+                <p class="mt-10 mb-1">¿Tienes dudas o ideas que compartir? ¡Escríbelas abajo!</p>
+              </div>
+              
+              {% if request.user.is_authenticated %}
+                  {% include 'comments/comment_form.html' with form=comment_form %}
+              {% endif %}
+            </div>
+            {% if comentarios %}
+              {% for comment in comentarios %}
+                <div class="details-contact-area m-0 mt-2 p-3">
+                  <div class="row align-items-center py-2">
+                    <!-- Columna Izquierda: Avatar y Texto del Comentario -->
+                    <div class="col-12 col-md-8 col-lg-9">
+                      <div class="d-flex align-items-start">
+                        <!-- Contenedor del Avatar (flex-shrink-0 evita que se encoja) -->
+                        <div class="flex-shrink-0">
+                          <img src="{{ comment.user.avatar_image.url }}" 
+                              alt="{{ comment.user.username }}"
+                              class="avatar rounded-circle">  {# La clase 'avatar' debería ser suficiente para el tamaño #}
+                        </div>
+
+                        <!-- Contenedor del Texto (flex-grow-1 hace que ocupe el espacio sobrante) -->
+                        <div class="flex-grow-1 ms-3">
+                          <strong>{{ comment.user.username }}</strong>
+                          <div class="text-muted">{{ comment.content }}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Columna Derecha: Botón de "Me Gusta" y Contador -->
+                    <div class="col-12 col-md-4 col-lg-3 mt-2 mt-md-0 text-md-end">
+                      <form action="{% url 'comments:comment_like_toggle' comment.id %}" method="post" class="d-inline-block">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-red btn-sm mb-1 w-100">
+                              {% if comment.user_has_liked %}
+                                  <i class="ti ti-thumb-up-filled me-1"></i>Quitar me gusta
+                              {% else %}
+                                  <i class="ti ti-thumb-up me-1"></i>Me gusta
+                              {% endif %}
+                          </button>
+                      </form>
+                      <div class="text-muted small">
+                        Likes: <strong>{{ comment.likes_comentarios.count }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>                
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div> <!-- Fin de .blog-page3-single-box -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+.gradient-text-title {
+    background: linear-gradient(113deg, #801cfa 12%, #f3213c 50%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+}
+
+
+.gradient-text-2 {
+    background: linear-gradient(90deg, #6740d0 0%, #726efc 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+}

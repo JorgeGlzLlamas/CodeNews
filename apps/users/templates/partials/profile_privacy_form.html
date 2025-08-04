@@ -1,27 +1,143 @@
-<!-- Formulario de configuración de privacidad de usuario  -->
-<div>
-    <h2>Configuración de Privacidad</h2>
-    <form method="post" action={% url 'users:profile_privacy' user.slug %}>
-        {% csrf_token %}
-            <div>
-                <label>Nombre público</label>
-                {{ form.username_or_name }}
-            </div>
-            <div>
-                <label>Correo electrónico</label>
-                {{ form.email_is_public }}
-            </div>
-            
-            <div>
-                <label>Número de teléfono</label>
-                {{ form.phone_is_public }}
-            </div>
-            <div>
-                <label>Biografía</label>
-                {{ form.bio_is_public }}
-            </div>
-            {% if can_edit%}
-                <button type="submit">Guardar Cambios</button>
+<div class="row">
+    <div class="col-12 m-auto">
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <h3 class=" gradient-text-title">
+                <i class="ti ti-share me-2"></i>Redes Sociales
+            </h3>
+            {% if user_owner %}
+                <button type="submit" class="btn theme-btn7 text-white"
+                        data-bs-toggle="modal" data-bs-target="#addSocialModal">
+                    <i class="ti ti-circle-plus me-2"></i>Red Social
+                </button>
             {% endif %}
-    </form>
+        </div>
+    </div>
 </div>
+<div class="card mb-4">
+    <div class="card-body">
+        {% if user.social_media.all %}
+            {% for social in user.social_media.all %}
+                {% with classes=social.get_tabler_classes %}
+                <div class="card mb-2">
+                    <div class="card-body p-1 d-flex align-items-center justify-content-between">
+                        <div class="{% if user_owner %} col-6 col-md-4 col-lg-3 {% else %} col {% endif %}">
+                            <a href="{{ social.link }}" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="btn {{ classes.button }} btn-icon-text w-100">
+                                <i class="ti {{ classes.icon }} me-2"></i>
+                                {{ social.get_platform_display }}
+                            </a>
+                        </div>
+                        {% if user_owner %}
+                            <div class="col-auto">
+                                <!-- Boton de Acción (Eliminar) -->
+                                <form method="post" action="{% url 'users:social_media_delete' pk=social.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-icon">
+                                        <i class="ti ti-trash fs-3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+            <!-- El usuario no tiene artículos publicados -->
+            <div class="empty p-0">
+                <div class="empty-icon m-auto">
+                    <i class="ti ti-share-off fs-1"></i>
+                </div>
+                <p class="empty-title">Sin redes sociales</p>
+                <p class="empty-subtitle text-muted">Aún no tienes agregadas redes sociales</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+                
+
+<!-- Formulario de configuración de privacidad de usuario -->
+<form method="post" action={% url 'users:profile_privacy' user.slug %}>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12 m-auto">
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+                <h3 class=" gradient-text-title">
+                    <i class="ti ti-eye me-2"></i>Visibilidad del Perfil
+                </h3>
+                {% if can_edit %}
+                    <button type="submit" class="btn theme-btn7 text-white">
+                        <i class="ti ti-device-floppy me-2"></i>Guardar Cambios
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <!-- Nombre público -->
+                <div class="mb-3 d-flex justify-content-between align-items-start w-100">
+                    <div class="me-3">
+                        <div class="form-label mb-1">Nombre público</div>
+                        <div class="text-muted small">
+                            Elige cómo quieres que se muestre tu nombre
+                        </div>
+                    </div>
+                    <div style="min-width: 150px;">
+                        {{ privacy_form.username_or_name }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Biografía -->
+                <div class="mb-3 d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="form-label mb-1">Biografía</div>
+                        <div class="text-muted small">
+                            Controla si tu biografía será visible para otros usuarios.
+                        </div>
+                    </div>
+                    <!-- Switch con estilo Tabler -->
+                    <label class="form-check form-switch ms-auto mb-auto mt-auto me-0 p-0">
+                        {{ privacy_form.bio_is_public }}
+                        <span class="form-check-label invisible">xxxxx</span>
+                    </label>
+                </div>
+                <!-- Email -->
+                <div class="mb-3 d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="form-label mb-1">Correo electrónico</div>
+                        <div class="text-muted small">
+                            Controla si tu correo será visible para otros usuarios.
+                        </div>
+                    </div>
+                    <!-- Switch con estilo Tabler -->
+                    <label class="form-check form-switch ms-auto mb-auto mt-auto me-0 p-0">
+                        {{ privacy_form.email_is_public }}
+                        <span class="form-check-label invisible">xxxxx</span>
+                    </label>
+                </div>
+                <!-- Teléfono -->
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="form-label mb-1">Teléfono</div>
+                        <div class="text-muted small">
+                            Controla si tu número de teléfono será visible para otros usuarios.
+                        </div>
+                    </div>
+                    <!-- Switch con estilo Tabler -->
+                    <label class="form-check form-switch ms-auto mb-auto mt-auto me-0 p-0">
+                        {{ privacy_form.phone_is_public }}
+                        <span class="form-check-label invisible">xxxxx</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal for social media -->
+{% include 'partials/profile_social_media_form.html' %}

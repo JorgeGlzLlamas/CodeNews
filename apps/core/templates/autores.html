@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CodeNews - Autores{% endblock %}
+
+{% block content %}
+
+<div class="inner-hero bg-cover position-relative" style="background-color:rgb(202, 187, 228);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="main-heading">
+                    <h1 class="display-4 bg-purple text-white py-3 px-5 d-inline-block rounded-pill shadow-lg">Nuestros Autores</h1>
+                    <p class="mt-3 text-white lead fs-3">Descubre a los creadores de contenido de nuestra comunidad.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="blog-1 blog1-cetegorys sp blog-formets-sec py-5">
+    <div class="container">
+        <form method="GET" action="{% url 'core:autores' %}" id="filters-form" class="mb-5">
+            <div class="row align-items-end filter-area">
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <label for="search-input" class="form-label text-muted">Buscar Autor</label>
+                    <div class="position-relative">
+                        <input id="search-input" name="q" class="form-control form-control-lg ps-6" type="search" placeholder="Buscar por nombre o usuario..." value="{{ current_search }}">
+                        <i class="ti ti-search position-absolute" style="top: 50%; left: 1.25rem; transform: translateY(-50%);"></i>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 mb-lg-0">
+                    <label for="filter-select" class="form-label text-muted">Ordenar por</label>
+                    <select id="filter-select" name="sort" class="form-select form-select-lg nice-select">
+                        <option value="populares" {% if current_sort == 'populares' %}selected{% endif %}>Más Populares</option>
+                        <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>A - Z</option>
+                        <option value="z-a" {% if current_sort == 'z-a' %}selected{% endif %}>Z - A</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-lg-0">
+                    <label for="show-select" class="form-label text-muted">Mostrar</label>
+                    <select id="show-select" name="show" class="form-select form-select-lg nice-select">
+                        <option value="12" {% if current_show == '12' %}selected{% endif %}>12</option>
+                        <option value="24" {% if current_show == '24' %}selected{% endif %}>24</option>
+                        <option value="36" {% if current_show == '36' %}selected{% endif %}>36</option>
+                        <option value="all" {% if current_show == 'all' %}selected{% endif %}>Todos</option>
+                    </select>
+                </div>
+                <div class="col-lg-1 col-md-4 mt-sm-2 d-grid">
+                     <a href="{% url 'core:autores' %}" class="btn btn-outline-secondary btn-lg" title="Restablecer filtros">
+                         <i class="ti ti-refresh"></i>
+                     </a>
+                </div>
+            </div>
+        </form>
+        
+        <div class="row g-4">
+            {% for author in autores %}
+            <div class="col-xl-3 col-lg-4 col-md-6" 
+                data-aos="fade-up" data-aos-offset="50" data-aos-duration="400">
+                <a href="{% url 'core:autor' author.slug %}" class="text-decoration-none d-block h-100">
+                    <div class="top-author-box blog1-cetegory-box text-center h-100 shadow-sm rounded-3 d-flex flex-column">
+                        <div class="image image-anime position-relative flex-grow-0">
+                            <img src="{{ author.avatar_image.url }}" 
+                                alt="Avatar de {{ author.get_full_name|default:author.username }}"
+                                style="width: 100%; height: 200px; object-fit: cover;">
+                        </div>
+                        <div class="heading1 p-3 d-flex flex-column flex-grow-1">
+                            <strong class="mb-1 fs-3">
+                                <span class="text-dark">
+                                    {% if author.privacy.username_or_name == 'name' %}
+                                        {{ author.get_full_name }}
+                                    {% else %}
+                                        {{ author.username }}
+                                    {% endif %}
+                                </span>
+                            </strong>
+                            <div>
+                                <span class="badge bg-primary text-primary-fg badge-pill">{{ author.articles_count }}</span>
+                                <span class="text-muted">Artículo{{ author.articles_count|pluralize }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-warning">
+                    <h3 class="alert-title"><i class="ti ti-zoom-cancel me-2"></i>Sin Resultados</h3>
+                    <p class="text-muted">No se encontraron autores que coincidan con tu búsqueda.</p>
+                    <a href="{% url 'core:autores' %}" class="btn btn-primary mt-2">Restablecer Filtros</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if is_paginated and autores %}
+        <div class="space60"></div>
+        <div class="row">
+            <div class="col-12 m-auto">
+                <nav aria-label="Navegación de páginas">
+                    <div class="theme-pagination">
+                         <ul class="d-flex justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li><a href="?page={{ page_obj.previous_page_number }}&q={{ current_search }}&sort={{ current_sort }}&show={{ current_show }}" aria-label="Anterior"><i class="ti ti-chevron-left"></i></a></li>
+                            {% endif %}
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li><a class="active" href="#">{{ num }}</a></li>
+                                {% else %}
+                                    <li><a href="?page={{ num }}&q={{ current_search }}&sort={{ current_sort }}&show={{ current_show }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li><a href="?page={{ page_obj.next_page_number }}&q={{ current_search }}&sort={{ current_sort }}&show={{ current_show }}" aria-label="Siguiente"><i class="ti ti-chevron-right"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('filters-form');
+    const searchInput = document.getElementById('search-input');
+    const filterSelect = document.getElementById('filter-select');
+    const showSelect = document.getElementById('show-select');
+    let debounceTimer;
+
+    filterSelect.addEventListener('change', () => form.submit());
+    showSelect.addEventListener('change', () => form.submit());
+
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            form.submit();
+        }, 500);
+    });
+
+    form.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && document.activeElement === searchInput) {
+            event.preventDefault();
+            form.submit();
+        }
+    });
+});
+</script>
+
+{% endblock %}

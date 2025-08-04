@@ -1,23 +1,219 @@
-<form method="post">
-    {% csrf_token %}
-    {% if form.published_at %}
-        <div class="form-group">
-            <label>Fecha de Publicación</label>
-            <input type="date" name="form.published_at.name" 
-                value="{{ form.published_at.value|date:'Y-m-d' }}">
-        </div>
-    {% endif %}
+{% extends 'base.html' %}
+{% load static %}
 
-    {% if form.status %}
-        <div class="form-group">
-            <label>Status</label>
-            {{ form.status }}
-        </div>
-    {% endif %}
+{% block title %}
+  Editar Contenido - {{ article.title }}
+{% endblock %}
 
-    <div class="form-group">
-        <label>Contenido del artículo</label>
-        {{ form.content }}
+{% block content %}
+  <link rel="stylesheet" href="{% static 'vexon/css/markdown.css' %}" />
+
+  <div class="page-header">
+      <div class="col-12 col-md-10 col-lg-8 m-auto">
+        <div class="mb-1">
+          <ol class="breadcrumb" aria-label="breadcrumbs">
+            <li class="breadcrumb-item">
+              <a href="{% url 'core:home' %}">Inicio</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="{% url 'users:profile' user.slug %}">Perfil usuario</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="{% url 'articles:article_update' article.slug %}">Artículo</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              <a href="#">Contenido del artículo</a>
+            </li>
+          </ol>
+        </div>
+      </div>
+  </div>
+
+  <div class="page-body">
+    <div class="col-12 col-md-10 col-lg-8 m-auto">
+      <div class="row mb-3">
+        <div class="col-12">
+          <h1 class="page-title mb-3 gradient-text-title">Contenido del Artículo</h1>
+        </div>
+      </div>
+      {% include 'partials/messages.html' %}
+      <!-- El formulario postea a la vista de edición (ArticleUpdateView) -->
+      <form method="post" id="articleForm">
+        {% csrf_token %}
+        <div class="row g-3 mb-3">
+          <!-- Campo de Fecha de Publicación -->
+          <div class="col-md-6">
+            {% if form.published_at %}
+              <div class="form-floating">
+                <input type="date"
+                  name="{{ form.published_at.name }}"
+                  class="form-control"
+                  value="{{ form.published_at.value|date:'Y-m-d' }}">
+                <label>Fecha de Publicación</label>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Campo de Status -->
+          <div class="col-md-6">
+            {% if form.status %}
+              <div class="form-floating">
+                {{ form.status }}
+                <label>Status</label>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="editorTabs" data-bs-toggle="tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a href="#write-pane" class="nav-link active" id="write-tab" data-bs-toggle="tab" role="tab" aria-controls="write-pane" aria-selected="true">
+                        <i class="bi bi-pencil-fill me-1"></i> Redactar
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#preview-pane" class="nav-link" id="preview-tab" data-bs-toggle="tab" role="tab" aria-controls="preview-pane" aria-selected="false">
+                        <i class="bi bi-eye-fill me-1"></i> Vista previa
+                    </a>
+                </li>
+            </ul>
+        </div>
+          <div class="card-body p-0">
+            <div class="tab-content" id="editorTabsContent">
+              <div class="tab-pane fade show active" id="write-pane" role="tabpanel" aria-labelledby="write-tab" tabindex="0">
+                <div class="card-body editor-container p-0">
+                  <div class="toolbar m-0 p-2 border-bottom">
+                    <!-- Toolbar buttons -->
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('bold')" title="Negrita"><i class="ti ti-bold"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('italic')" title="Cursiva"><i class="ti ti-italic"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('heading')" title="Encabezado"><i class="ti ti-heading"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('link')" title="Enlace"><i class="ti ti-link"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('code')" title="Código"><i class="ti ti-code"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('list-ul')" title="Lista"><i class="ti ti-list"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('list-ol')" title="Lista numerada"><i class="ti ti-list-numbers"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('quote')" title="Cita"><i class="ti ti-quote"></i></button>
+                  </div>
+
+                  <label for="id_content"></label>
+                  <!-- CAMBIOS CLAVE EN EL TEXTAREA -->
+                  <textarea 
+                    name="content" 
+                    id="id_content" 
+                    class="markdown-input w-100 p-3" 
+                    placeholder="Escribe tu markdown aquí" 
+                    hx-post="{% url 'articles:markdown_preview' %}" 
+                    hx-target="#preview-content" 
+                    hx-trigger="input changed delay:300ms" 
+                    hx-indicator="#loading-indicator">{{ article.content|default_if_none:'' }}</textarea>
+                  
+                  {{ form.content.errors }}
+
+                  <div class="p-2 border-top">
+                    <span id="loading-indicator" class="htmx-indicator text-muted">
+                      <i class="bi bi-arrow-clockwise me-1"></i>
+                      <small>Actualizando preview...</small>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="preview-pane" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
+                <div class="card-body editor-container">
+                  <!-- CAMBIO CLAVE EN EL PREVIEW -->
+                  <div id="preview-content" class="preview-container preview-content">
+                    <!-- El contenido inicial se renderiza desde la vista con el filtro 'safe' -->
+                    {{ initial_preview_html|safe }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <button type="submit" name="save" class="btn theme-btn7 text-white">Guardar</button>
+        </div>
+      </form>
     </div>
-    <button type="submit">Guardar</button>
-</form>
+  </div>
+
+
+  <script>
+    // Espera a que todo el DOM esté cargado antes de ejecutar cualquier código
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const textarea = document.getElementById('id_content');
+
+      // Si por alguna razón el textarea no existiera, no continuamos y evitamos errores.
+      if (!textarea) {
+        return;
+      }
+
+      // Tu función para la barra de herramientas
+      window.formatText = function(command) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+        let newText = '';
+
+        switch (command) {
+          case 'bold':
+            newText = `**${selectedText}**`;
+            break;
+          case 'italic':
+            newText = `*${selectedText}*`;
+            break;
+          case 'heading':
+            newText = `# ${selectedText}`;
+            break;
+          case 'link':
+            const url = prompt('Ingresa la URL del enlace:', 'https://');
+            if (url) {
+              newText = `[${selectedText}](${url})`;
+            } else {
+              newText = selectedText;
+            }
+            break;
+          case 'code':
+            newText = `\`${selectedText}\``;
+            break;
+          case 'list-ul':
+            newText = `- ${selectedText}`;
+            break;
+          case 'list-ol':
+            newText = `1. ${selectedText}`;
+            break;
+          case 'quote':
+            newText = `> ${selectedText}`;
+            break;
+        }
+
+        textarea.setRangeText(newText, start, end, 'end');
+        textarea.focus();
+        htmx.trigger(textarea, 'input');
+      }
+
+      // Listener para la tecla Tab
+      textarea.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+          this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+          this.selectionStart = this.selectionEnd = start + 4;
+          htmx.trigger(this, 'input');
+        }
+      });
+
+      // Listener para la pestaña de preview
+      const previewTab = document.getElementById('preview-tab');
+      if (previewTab) {
+        previewTab.addEventListener('shown.bs.tab', function () {
+          htmx.trigger(textarea, 'input');
+        });
+      }
+
+    });
+  </script>
+{% endblock %}

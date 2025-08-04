@@ -1,0 +1,22 @@
+<form method="post" action="{% url 'comments:comment_create' article.id %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12 d-flex align-items-center">
+            <div class="flex-shrink-0">
+                          <img src="{{ request.user.avatar_image.url }}" 
+                              alt="{{ request.user.username }}"
+                              class="avatar rounded-circle me-2">  {# La clase 'avatar' debería ser suficiente para el tamaño #}
+                        </div>
+            <div>
+                <strong>{{ request.user.get_full_name }}</strong>
+                <p class="text-muted m-0">@{{ request.user.username }} | {{ request.user.email }}</p>
+            </div>
+        </div>
+        <div class="col-md-12">
+            {{ form.content }}
+            <div class="text-end mt-2">
+                <button class="btn theme-btn1 btn-pill text-white" type="submit">Enviar</button>
+            </div>
+        </div>
+    </div>
+</form>

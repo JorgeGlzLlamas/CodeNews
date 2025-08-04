@@ -1,5 +1,5 @@
 from django.urls import path
-from articles.views import articles
+from articles.views import articles, articles_reactions
 
 app_name = 'articles'
 
@@ -11,11 +11,16 @@ urlpatterns = [
     path('<slug:title>/contenido/',
          articles.ArticleContentView.as_view(),
          name='article_content'),
+    path('<slug:slug>/', articles.ArticleDetailView.as_view(), 
+         name='article_detail'),
     path('<slug:title>/editar/',
          articles.ArticleUpdateView.as_view(),
          name='article_update'),
-    # Set update flag for redirecting after content creation
-    path('<slug:slug>/set-update-flag/',
-         articles.set_from_update_view,
-         name='set_update_flag')
+    path('preview/markdown/', 
+          articles.MarkdownPreviewView.as_view(),
+          name='markdown_preview'),
+    path('<slug:slug>/favorito/', 
+         articles_reactions.ArticleFavoriteToggleView.as_view(),
+         name='article_favorite_toggle'),
+
 ]

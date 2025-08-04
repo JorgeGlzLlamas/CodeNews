@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from users.models.user import User
 
 
@@ -9,7 +9,7 @@ class UserRegistrationForm(UserCreationForm):
     password1 = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={
-            'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',
+            'class': 'form-control',
             'placeholder': 'Contraseña',
             'autocomplete': 'new-password',
         })
@@ -18,7 +18,7 @@ class UserRegistrationForm(UserCreationForm):
     password2 = forms.CharField(
         label="Confirmar contraseña",
         widget=forms.PasswordInput(attrs={
-            'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',
+            'class': 'form-control',
             'placeholder': 'Confirmar contraseña',
             'autocomplete': 'new-password',
         })
@@ -33,26 +33,35 @@ class UserRegistrationForm(UserCreationForm):
 
         widgets = {
             'username': forms.TextInput(attrs={
-                'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',
+                'class': 'form-control',
                 'placeholder': 'Nombre de usuario',
                 'autocomplete': 'username'
             }),
             'email': forms.EmailInput(attrs={
-                'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',
+                'class': 'form-control',
                 'placeholder': 'Correo electrónico',
                 'autocomplete': 'email'
             }),
             'first_name': forms.TextInput(attrs={
-                'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',
+                'class': 'form-control',
                 'placeholder': 'Nombre',
                 'autocomplete': 'given-name'
             }),
             'last_name': forms.TextInput(attrs={
-                'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',
+                'class': 'form-control',
                 'placeholder': 'Apellido',
                 'autocomplete': 'family-name'
             }),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Añadir clase 'is-invalid' a campos con errores
+        for name, field in self.fields.items():
+            if self.errors.get(name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f'{existing} is-invalid'
 
 
 class LoginForm(AuthenticationForm):
@@ -60,7 +69,7 @@ class LoginForm(AuthenticationForm):
 
     username = forms.CharField(
         widget=forms.TextInput(attrs={
-            'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light',            
+            'class': 'form-control',            
             'placeholder': 'Nombre de usuario',
             'autocomplete': 'username',
         })
@@ -68,8 +77,57 @@ class LoginForm(AuthenticationForm):
 
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'class': 'block w-full rounded-md py-2.5 px-4 text-dark text-base font-medium border-gray-300 focus:border-primary focus:outline-0 focus:ring-0 placeholder:text-light mb-4',
+            'class': 'form-control',
             'placeholder': 'Contraseña',
             'autocomplete': 'current-password',
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Añadir clase 'is-invalid' a campos con errores
+        for name, field in self.fields.items():
+            if self.errors.get(name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f'{existing} is-invalid'
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    """Formulario personalizado para cambiar la contraseña."""
+
+    old_password = forms.CharField(
+        label="Contraseña actual",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingresa tu contraseña actual',
+            'autocomplete': 'current-password',
+        })
+    )
+
+    new_password1 = forms.CharField(
+        label="Nueva contraseña",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Escribe tu nueva contraseña',
+            'autocomplete': 'new-password',
+        })
+    )
+
+    new_password2 = forms.CharField(
+        label="Confirmar nueva contraseña",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirma tu nueva contraseña',
+            'autocomplete': 'new-password',
+        })
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Añadir clase 'is-invalid' a campos con errores
+        for name, field in self.fields.items():
+            if self.errors.get(name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f'{existing} is-invalid'

@@ -70,7 +70,7 @@ class Articles(models.Model):
     thumbnail_image = models.ImageField(
         upload_to=article_thumbnail_upload_to,
         verbose_name='Imagen en miniatura del Artículo',
-        blank=True,
+        default='vexon/img/logo/article_default.webp'
     )
 
     status = models.CharField(
@@ -140,3 +140,8 @@ class Articles(models.Model):
             self.thumbnail_image.delete(save=False)
         super().delete(*args, **kwargs)
 
+    def is_favorited_by(self, user):
+        """Checks if the article is in a specific user's favorites."""
+        if user.is_anonymous:
+            return False
+        return self.favorites.filter(user=user).exists()
