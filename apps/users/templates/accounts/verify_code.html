@@ -1,0 +1,29 @@
+{% extends 'base_forms.html' %}
+{% load static %}
+
+{% block title %}Restablecer contraseña{% endblock %}
+
+{% block content %}
+<h2 class="page-title mb-3 gradient-text-title text-center">Verificación de código</h2>
+
+{% include 'partials/messages.html' %}
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Código:</label>
+        {{ form.code }}
+        <p class="text-muted">Se envío un código de 6 dígitos a su correo</p>
+        {% if form.code.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.code.errors|join:", " }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="form-footer">
+        <button type="submit" class="btn theme-btn7 text-white w-100">
+            Verificar código
+        </button>
+    </div>
+</form>
+{% endblock %}
+
