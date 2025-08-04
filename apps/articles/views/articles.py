@@ -15,6 +15,7 @@ from articles.models.articles import Articles
 from users.models.user_rol import Rol
 from articles.forms.article_data import ArticleDataCreateForm, ArticleDataUpdateForm
 from articles.forms.article_content import ArticleContentForm
+from comments.forms.comments import CommentForm
 
 import logging
 import re
@@ -168,4 +169,16 @@ class ArticleDetailView(DetailView):
         # Divide en secciones por <h2> o <h3>
         secciones = re.split(r'(?=<h2>|<h3>)', html)
         context['sections'] = secciones  # Lista con cada bloque
+
+        # Comentarios
+        comentarios = self.object.commentarios.all().order_by('-id')
+        # Artículo
+        article = self.object
+        if self.request.user.is_authenticated:
+            article.is_favorited = article.is_favorited_by(self.request.user)
+            for comment in comentarios:
+                # Verficamos si el usuario ha dado like al comentario (True/False)
+                comment.user_has_liked = comment.is_liked_by(self.request.user)
+        context['comentarios'] = comentarios
+        context['comment_form'] = CommentForm()
         return context
