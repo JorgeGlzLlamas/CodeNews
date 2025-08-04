@@ -1,5 +1,5 @@
 from django.urls import path
-from articles.views import articles
+from articles.views import articles, articles_reactions
 
 app_name = 'articles'
 
@@ -16,7 +16,11 @@ urlpatterns = [
     path('<slug:title>/editar/',
          articles.ArticleUpdateView.as_view(),
          name='article_update'),
-     path('preview/markdown/', 
+    path('preview/markdown/', 
           articles.MarkdownPreviewView.as_view(),
           name='markdown_preview'),
+    path('<slug:slug>/favorito/', 
+         articles_reactions.ArticleFavoriteToggleView.as_view(),
+         name='article_favorite_toggle'),
+
 ]
