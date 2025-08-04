@@ -70,7 +70,7 @@ class Articles(models.Model):
     thumbnail_image = models.ImageField(
         upload_to=article_thumbnail_upload_to,
         verbose_name='Imagen en miniatura del Artículo',
-        blank=True,
+        default='vexon/img/logo/article_default.webp'
     )
 
     status = models.CharField(

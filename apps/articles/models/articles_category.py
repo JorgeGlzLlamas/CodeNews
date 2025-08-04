@@ -23,8 +23,7 @@ class ArticlesCategory(models.Model):
     image = models.ImageField(
         verbose_name="Category Image",
         upload_to=image_upload_to,
-        blank=True,
-        null=True
+        default='vexon/img/logo/category_default.webp'
     )
 
     slug = models.SlugField(
