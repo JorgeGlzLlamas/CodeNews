@@ -8,11 +8,44 @@ from users.models import User, SocialMedia
 
 def home(request):
     """
-    Renderiza la página de inicio.
+    Renderiza la página de inicio con todas las secciones y datos optimizados.
     """
+    # --- Para el Slider "En Boca de Todos" ---
+    most_viewed_articles = Articles.objects.filter(
+        status='published'
+    ).select_related('user', 'category').order_by('-views_count')[:5]
+
+    # --- Para el Grid de Categorías Populares ---
+    popular_categories = ArticlesCategory.objects.annotate(
+        article_count=Count('articles', filter=Q(articles__status='published'))
+    ).filter(article_count__gt=0).order_by('-article_count')[:5]
+
+    # --- Para el Grid de Artículos Recientes ---
+    recent_articles = Articles.objects.filter(
+        status='published'
+    ).select_related('user', 'category').order_by('-published_at')[:6]
+
+    # --- Para la Sección de Autores Destacados (Consulta Optimizada) ---
+    # Usamos prefetch_related para traer las redes sociales de forma eficiente
+    featured_authors = User.objects.annotate(
+        article_count=Count('articles', filter=Q(articles__status='published'))
+    ).filter(
+        article_count__gt=0
+    ).prefetch_related(
+        'social_media' 
+    ).select_related(
+        'privacy', 'rol' # Asumiendo que tienes estos modelos relacionados
+    ).order_by('-article_count')[:4] # Mostramos 4 para que el diseño se vea mejor
+
+
+    # --- Contexto final para la Plantilla ---
     context = {
-        'template_name': 'home'
+        'most_viewed_articles': most_viewed_articles,
+        'popular_categories': popular_categories,
+        'recent_articles': recent_articles, 
+        'featured_authors': featured_authors,
     }
+    
     return render(request, 'index.html', context)
 
 def categorias(request):
