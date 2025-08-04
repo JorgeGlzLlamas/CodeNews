@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import DetailView
+from django.db.models import F
 
 import markdown
 from django.http import HttpResponse
@@ -160,6 +161,15 @@ class ArticleDetailView(DetailView):
     template_name = 'articles/article_detail.html'
     context_object_name = 'article'
     slug_url_kwarg = 'slug'
+
+    def get(self, request, *args, **kwargs):
+        """
+        Sobrescribimos el método GET para incrementar el contador de vistas.
+        """
+        self.object = self.get_object()
+        Articles.objects.filter(pk=self.object.pk).update(views_count=F('views_count') + 1)
+        self.object.refresh_from_db()
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
