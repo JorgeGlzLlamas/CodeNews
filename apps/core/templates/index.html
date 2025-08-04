@@ -179,11 +179,11 @@
             <div class=" col-xl-2 col-lg-3 col-md-4 col-sm-6 author-card" 
                 data-aos="fade-up" data-aos-offset="50" data-aos-duration="400">
 
-                <a href="{% url 'core:autor' author.id %}" class="text-decoration-none d-block h-100">
+                <a href="{% url 'core:autor' author.slug %}" class="text-decoration-none d-block h-100">
                     <div class="top-author-box blog1-cetegory-box text-center h-100 shadow-sm rounded-3 d-flex flex-column">
                         
                         <div class="image image-anime position-relative flex-grow-0">
-                            <img src="{% if author.avatar_image %}{{ author.avatar_image.url }}{% else %}{% static 'assets/img/placeholder-author.jpg' %}{% endif %}" 
+                            <img src="{{ author.avatar_image.url }}" 
                                 alt="Avatar de {{ author.get_full_name|default:author.username }}"
                                 style="width: 100%; height: 200px; object-fit: cover;">
                         </div>
