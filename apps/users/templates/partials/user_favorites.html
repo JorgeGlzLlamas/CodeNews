@@ -10,55 +10,43 @@
 
 {% if user.favorite_articles.all %}
 <div class="row g-3">
-  {% for article in user.favorite_articles.all %}
+  {% for favorite_entry in user.favorite_articles.all %}
   <div class="col-12 col-md-6 col-lg-4 d-flex">
     <div class="card card-sm h-100 flex-column">
-      {% if article.thumbnail_image %}
+      
+      {% if favorite_entry.article.thumbnail_image %}
         <img
-          src="{{ article.thumbnail_image.url }}"
+          src="{{ favorite_entry.article.thumbnail_image.url }}"
           class="card-img-top"
           style="height: 160px; object-fit: cover"
-          alt="{{ article.title }}"
+          alt="{{ favorite_entry.article.title }}"
         />
       {% endif %}
+      
       <div class="card-body d-flex flex-column">
         <div class="mb-1 d-flex align-items-center justify-content-between text-end">
-            {% if article.published_at %}
+            {% if favorite_entry.article.published_at %}
                 <p class="text-muted m-0 align-self-end">
                     <i class="ti ti-calendar me-1"></i>
-                    {{ article.published_at|date:"d F Y" }}
+                    {{ favorite_entry.article.published_at|date:"d F Y" }}
                 </p>
             {% else %}
                 <div class="invisible">x</div>
             {% endif %}
-            <!-- Status del artículo -->
-            {% if article.status == "draft" %}
-                <span class="badge bg-secondary-lt text-secondary-lt-fg">
-                    {{ article.get_status_display }}
-                </span>
-            {% elif article.status == "published" %}
-                <span class="badge bg-green-lt text-green-lt-fg">
-                    {{ article.get_status_display }}
-                </span>
-            {% elif article.status == "archived" %}
-                <span class="badge bg-yellow-lt text-yellow-lt-fg">
-                    {{ article.get_status_display }}
-                </span>
-            {% endif %}
+            
+            <span class="badge bg-blue-lt">
+                {{ favorite_entry.article.category }}
+            </span>
         </div>
 
-        <h4 class="card-title">{{ article.title|truncatechars:50 }}</h4>
+        <h4 class="card-title">{{ favorite_entry.article.title|truncatechars:50 }}</h4>
         <div class="text-secondary mb-3">
-            {{ article.description|truncatechars:120 }}
+            {{ favorite_entry.article.description|truncatechars:120 }}
         </div>
         <div class="d-flex align-items-center mb-0 mt-auto">
-            <a href="#" 
+            <a href="{% url 'articles:article_detail' favorite_entry.article.slug %}" 
                 class="btn theme-btn2 btn-pill btn-sm ms-auto text-white"> 
                 Leer más
-            </a>
-          <a href="{% url 'articles:article_update' article.slug %}" 
-                class="btn theme-btn1 btn-pill btn-sm ms-1 text-white"> 
-                Editar
             </a>
         </div>
       </div>
