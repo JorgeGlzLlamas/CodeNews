@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from users.models.user import User
 
 
@@ -71,5 +71,36 @@ class LoginForm(AuthenticationForm):
             'class': 'form-control',
             'placeholder': 'Contraseña',
             'autocomplete': 'current-password',
+        })
+    )
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    """Formulario personalizado para cambiar la contraseña."""
+
+    old_password = forms.CharField(
+        label="Contraseña actual",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingresa tu contraseña actual',
+            'autocomplete': 'current-password',
+        })
+    )
+
+    new_password1 = forms.CharField(
+        label="Nueva contraseña",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Escribe tu nueva contraseña',
+            'autocomplete': 'new-password',
+        })
+    )
+
+    new_password2 = forms.CharField(
+        label="Confirmar nueva contraseña",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirma tu nueva contraseña',
+            'autocomplete': 'new-password',
         })
     )

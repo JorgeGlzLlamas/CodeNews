@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 
-from users.forms.user_form import UserRegistrationForm, LoginForm
+from users.forms.user_form import UserRegistrationForm, LoginForm, CustomPasswordChangeForm
 from users.models.user import User
 from users.models.user_rol import Rol
 from users.models.user_privacity import UserPrivacy
@@ -54,6 +54,7 @@ class AuthenticationView(LoginView):
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     """Change password view for users."""
     template_name = 'change_password.html'
+    form_class = CustomPasswordChangeForm
 
     def form_valid(self, form):
         messages.success(
